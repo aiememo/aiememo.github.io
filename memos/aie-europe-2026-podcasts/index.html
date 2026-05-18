@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIE EU 2026 — Podcast Organizing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #f5f5f7;
+      --surface:   #ffffff;
+      --surface-2: #f9f9f7;
+      --border:    #e5e5ea;
+      --border-2:  #d2d2d7;
+      --text:      #1d1d1f;
+      --text-2:    #6e6e73;
+      --text-3:    #aeaeb2;
+
+      /* Series palette — soft, confident */
+      --blue:       #1555b7;
+      --blue-bg:    #eef4ff;
+      --blue-bd:    #c5d8fb;
+
+      --purple:     #5e3fbf;
+      --purple-bg:  #f3f0fb;
+      --purple-bd:  #d1c8f2;
+
+      --amber:      #974c0c;
+      --amber-bg:   #fff8f1;
+      --amber-bd:   #fdd5a8;
+
+      --teal:       #0d7a6a;
+      --teal-bg:    #f0faf8;
+      --teal-bd:    #aae4d9;
+
+      --r:    8px;
+      --r-sm: 5px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding: 40px 44px 72px;
+    }
+
+    /* ── Header ──────────────────────────────────────────────── */
+    .header { margin-bottom: 36px; }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 5px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.025em;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 22px;
+      gap: 2px;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-n { font-size: 17px; font-weight: 600; line-height: 1; color: var(--text); }
+    .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
+
+    /* ── Page layout ─────────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 288px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Timeline ────────────────────────────────────────────── */
+    .timeline { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Collapsible day block ────────────────────────────────── */
+    details.day-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+
+    details.day-block > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      user-select: none;
+      transition: background 0.1s;
+    }
+    details.day-block > summary:hover { background: #f0f0f0; }
+    details.day-block:not([open]) > summary { border-bottom: none; }
+    details.day-block > summary::-webkit-details-marker { display: none; }
+    details.day-block > summary::marker { content: ''; }
+
+    .day-line { flex: 1; height: 1px; background: var(--border); }
+
+    .day-chevron {
+      font-size: 11px;
+      color: var(--text-3);
+      transition: transform 0.18s ease;
+    }
+    details[open] .day-chevron { transform: rotate(180deg); }
+
+    /* ── Series group ─────────────────────────────────────────── */
+    .series-group { border-bottom: 1px solid var(--border); }
+    .series-group:last-child { border-bottom: none; }
+
+    .series-hd {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 16px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid;
+    }
+    .series-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .podcast-booth    .series-hd { background: var(--blue-bg);   color: var(--blue);   border-color: var(--blue-bd);   }
+    .podcast-booth    .series-dot { background: var(--blue); }
+    .thursdayai-live  .series-hd { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-bd); }
+    .thursdayai-live  .series-dot { background: var(--purple); }
+    .friday-podcast   .series-hd { background: var(--amber-bg);  color: var(--amber);  border-color: var(--amber-bd);  }
+    .friday-podcast   .series-dot { background: var(--amber); }
+    .thursdayai-booth .series-hd { background: var(--teal-bg);   color: var(--teal);   border-color: var(--teal-bd);   }
+    .thursdayai-booth .series-dot { background: var(--teal); }
+
+    /* ── Episode rows ─────────────────────────────────────────── */
+    .ep-row {
+      display: grid;
+      grid-template-columns: 54px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ep-row:last-child { border-bottom: none; }
+
+    .ep-row.segment {
+      padding-left: 30px;
+      background: #fbfbf9;
+    }
+
+    .ep-id {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-3);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .ep-id.child { color: var(--purple); }
+
+    .ep-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .ep-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ep-sub {
+      font-size: 11px;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ep-pills { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .pill {
+      padding: 2px 7px;
+      border-radius: var(--r-sm);
+      font-size: 10px;
+      font-weight: 500;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .pill.v { color: #1555b7; border-color: #c5d8fb; background: #eef4ff; }
+    .pill.a { color: #1a6b47; border-color: #b0dfc6; background: #effaf5; }
+    .pill.t { color: #8a4d0f; border-color: #fdd0a0; background: #fff8f1; }
+
+    /* ── Sidebar ──────────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .card-hd {
+      padding: 8px 14px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .card-body { padding: 12px 14px; }
+
+    /* Series legend */
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text);
+    }
+    .legend-row:last-child { border-bottom: none; }
+    .ldot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .lcnt { margin-left: auto; font-size: 10px; color: var(--text-3); }
+
+    /* Asset legend */
+    .al-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-2);
+    }
+    .al-row:last-child { border-bottom: none; }
+
+    /* ── Folder tree ──────────────────────────────────────────── */
+    .tree {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    /* Each tree row is a flex div; indentation via padding-left classes */
+    .tl { display: flex; align-items: baseline; white-space: nowrap; }
+    .tl-1 { padding-left: 13px; }
+    .tl-2 { padding-left: 26px; }
+    .tl-3 { padding-left: 39px; }
+    .tl-gap { height: 5px; }
+
+    .tc  { color: var(--border-2); margin-right: 4px; }  /* connector */
+    .td  { color: #b45309; font-weight: 500; }            /* dir  — warm amber */
+    .tcsv { color: #2e7d32; }                             /* .csv — forest green */
+    .tjson{ color: #bf5b17; }                             /* .json — sienna */
+    .tpy  { color: #1555b7; }                             /* .py  — indigo */
+    .tps1 { color: #5e3fbf; }                             /* .ps1 — purple */
+    .tm   { color: var(--text-2); }                       /* neutral */
+
+    .tbadge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 5px;
+      height: 14px;
+      font-size: 9px;
+      font-weight: 500;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--text-3);
+      background: var(--surface-2);
+      margin-left: 5px;
+      vertical-align: middle;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="eyebrow">AI Engineer Europe · April 2026</div>
+  <h1 class="title">Podcast Organizing</h1>
+  <div class="stats">
+    <div class="stat"><span class="stat-n">16</span><span class="stat-l">Episodes</span></div>
+    <div class="stat"><span class="stat-n">3</span><span class="stat-l">Days</span></div>
+    <div class="stat"><span class="stat-n">4</span><span class="stat-l">Series</span></div>
+    <div class="stat"><span class="stat-n">All</span><span class="stat-l">Confirmed</span></div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- ── Timeline ───────────────────────────────────────────── -->
+  <div class="timeline">
+
+    <!-- Apr 8 -->
+    <details class="day-block" open>
+      <summary>
+        <span>Apr 8</span>
+        <span class="day-line"></span>
+        <span class="day-chevron">▾</span>
+      </summary>
+      <div class="series-group podcast-booth">
+        <div class="series-hd"><span class="series-dot"></span>Podcast Booth</div>
+        <div class="ep-row">
+          <span class="ep-id">EP-001</span>
+          <div class="ep-info">
+            <span class="ep-name">Vaibhav "VB" Srivastava</span>
+            <span class="ep-sub">OpenAI &nbsp;·&nbsp; Codex &amp; Developer Workflows</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Apr 9 -->
+    <details class="day-block" open>
+      <summary>
+        <span>Apr 9</span>
+        <span class="day-line"></span>
+        <span class="day-chevron">▾</span>
+      </summary>
+      <div class="series-group thursdayai-live">
+        <div class="series-hd"><span class="series-dot"></span>Thursday AI Live</div>
+
+        <div class="ep-row">
+          <span class="ep-id">EP-004</span>
+          <div class="ep-info">
+            <span class="ep-name">Full Show — Alex Volkov, Swyx, Wolfram</span>
+            <span class="ep-sub">Thursday AI &nbsp;·&nbsp; Full Live Recording</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 2×cam</span>
+            <span class="pill t">✦ 2×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-01</span>
+          <div class="ep-info">
+            <span class="ep-name">Opening News</span>
+            <span class="ep-sub">Alex Volkov, Swyx, Wolfram</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-02</span>
+          <div class="ep-info">
+            <span class="ep-name">Wolfram Event Recap</span>
+            <span class="ep-sub">Wolfram Ravenwolf &nbsp;·&nbsp; Thursday AI</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-03</span>
+          <div class="ep-info">
+            <span class="ep-name">Vaibhav Srivastava</span>
+            <span class="ep-sub">OpenAI &nbsp;·&nbsp; Live Guest Segment</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-04</span>
+          <div class="ep-info">
+            <span class="ep-name">Vincent Koh</span>
+            <span class="ep-sub">OpenCloud &nbsp;·&nbsp; Live Guest Segment</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-05</span>
+          <div class="ep-info">
+            <span class="ep-name">Omar Sanseviero</span>
+            <span class="ep-sub">Google DeepMind &nbsp;·&nbsp; Gemma 4</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+        <div class="ep-row segment">
+          <span class="ep-id child">↳ SEG-06</span>
+          <div class="ep-info">
+            <span class="ep-name">Closing Panel</span>
+            <span class="ep-sub">Alex, Wolfram, Nistan, Jan, LDJ</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ VTT</span>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Apr 10 -->
+    <details class="day-block" open>
+      <summary>
+        <span>Apr 10</span>
+        <span class="day-line"></span>
+        <span class="day-chevron">▾</span>
+      </summary>
+
+      <!-- Podcast Booth -->
+      <div class="series-group podcast-booth">
+        <div class="series-hd"><span class="series-dot"></span>Podcast Booth</div>
+        <div class="ep-row">
+          <span class="ep-id">EP-002</span>
+          <div class="ep-info">
+            <span class="ep-name">Matt Pocock</span>
+            <span class="ep-sub">AI Hero</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-003</span>
+          <div class="ep-info">
+            <span class="ep-name">Sunil Pai</span>
+            <span class="ep-sub">Codemode</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-005</span>
+          <div class="ep-info">
+            <span class="ep-name">Louis &amp; Sean</span>
+            <span class="ep-sub">AI Engineers &nbsp;·&nbsp; Conference Format &amp; Strategy</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-009</span>
+          <div class="ep-info">
+            <span class="ep-name">Maggie Appleton</span>
+            <span class="ep-sub">GitHub &nbsp;·&nbsp; Collaborative Dev Tooling</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-010</span>
+          <div class="ep-info">
+            <span class="ep-name">Nick &amp; Zach</span>
+            <span class="ep-sub">WorkOS &nbsp;·&nbsp; Agentic AI Tools</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-011</span>
+          <div class="ep-info">
+            <span class="ep-name">Cloudflare Roundtable</span>
+            <span class="ep-sub">Cloudflare &nbsp;·&nbsp; Panel</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Friday Podcast -->
+      <div class="series-group friday-podcast">
+        <div class="series-hd"><span class="series-dot"></span>Friday Podcast</div>
+        <div class="ep-row">
+          <span class="ep-id">EP-006</span>
+          <div class="ep-info">
+            <span class="ep-name">Matt Trigger</span>
+            <span class="ep-sub">Trigger</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-007</span>
+          <div class="ep-info">
+            <span class="ep-name">Kyle</span>
+            <span class="ep-sub">Depot</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-008</span>
+          <div class="ep-info">
+            <span class="ep-name">Lawrence</span>
+            <span class="ep-sub">incident.io</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ThursdAI Booth -->
+      <div class="series-group thursdayai-booth">
+        <div class="series-hd"><span class="series-dot"></span>ThursdAI Booth</div>
+        <div class="ep-row">
+          <span class="ep-id">EP-012</span>
+          <div class="ep-info">
+            <span class="ep-name">Marlene Mangami</span>
+            <span class="ep-sub">GitHub</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-013</span>
+          <div class="ep-info">
+            <span class="ep-name">Gemma 4 Panel</span>
+            <span class="ep-sub">Google DeepMind &nbsp;·&nbsp; Open Models</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 3×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 4×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-014</span>
+          <div class="ep-info">
+            <span class="ep-name">Sally Ann O'Malley</span>
+            <span class="ep-sub">Red Hat &nbsp;·&nbsp; Containers &amp; AI Platforms</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 4×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 5×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-015</span>
+          <div class="ep-info">
+            <span class="ep-name">Sunil Pai</span>
+            <span class="ep-sub">Cloudflare &nbsp;·&nbsp; Agents &amp; Infrastructure</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 4×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 5×VTT</span>
+          </div>
+        </div>
+        <div class="ep-row">
+          <span class="ep-id">EP-016</span>
+          <div class="ep-info">
+            <span class="ep-name">Eric Zakariason</span>
+            <span class="ep-sub">Cursor</span>
+          </div>
+          <div class="ep-pills">
+            <span class="pill v">▶ 4×ISO</span>
+            <span class="pill a">♪ master</span>
+            <span class="pill t">✦ 5×VTT</span>
+          </div>
+        </div>
+      </div>
+
+    </details>
+
+  </div><!-- /timeline -->
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <div class="sidebar">
+
+    <div class="card">
+      <div class="card-hd">Series</div>
+      <div class="card-body">
+        <div class="legend-row"><span class="ldot" style="background:var(--blue)"></span>Podcast Booth<span class="lcnt">7 eps</span></div>
+        <div class="legend-row"><span class="ldot" style="background:var(--purple)"></span>Thursday AI Live<span class="lcnt">1 + 6 segs</span></div>
+        <div class="legend-row"><span class="ldot" style="background:var(--amber)"></span>Friday Podcast<span class="lcnt">3 eps</span></div>
+        <div class="legend-row"><span class="ldot" style="background:var(--teal)"></span>ThursdAI Booth<span class="lcnt">5 eps</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">Asset Types</div>
+      <div class="card-body">
+        <div class="al-row"><span class="pill v" style="flex-shrink:0">▶ video</span>multi-camera ISO</div>
+        <div class="al-row"><span class="pill a" style="flex-shrink:0">♪ audio</span>production master</div>
+        <div class="al-row"><span class="pill t" style="flex-shrink:0">✦ VTT</span>transcript per track</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">Folder Structure</div>
+      <div class="card-body" style="padding: 10px 14px;">
+        <div class="tree">
+
+          <div class="tl"><span class="td">eu2026-podcast-organizing/</span></div>
+
+          <div class="tl tl-1"><span class="tc">├─</span><span class="td">_ingest/</span><span class="tbadge">raw</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">media-manifest.csv</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tjson">media-manifest.json</span></div>
+          <div class="tl tl-2"><span class="tc">└─</span><span class="td">metadata/</span><span class="tbadge">50+ files</span></div>
+
+          <div class="tl-gap"></div>
+
+          <div class="tl tl-1"><span class="tc">├─</span><span class="td">catalog/</span><span class="tbadge">8 files</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">episode_registry.csv</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">asset_inventory.csv</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tjson">asset_inventory.json</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">alignment_report.csv</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">asset_map.csv</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tcsv">rename_crosswalk.csv</span></div>
+          <div class="tl tl-2"><span class="tc">└─</span><span class="tcsv">sync-offset-report.csv/.json</span></div>
+
+          <div class="tl-gap"></div>
+
+          <div class="tl tl-1"><span class="tc">├─</span><span class="td">episodes/</span><span class="tbadge">20 dirs</span></div>
+          <div class="tl tl-2"><span class="tc">└─</span><span class="td">{date}-{slug}/</span></div>
+          <div class="tl tl-3"><span class="tc">├─</span><span class="tjson">episode.json</span></div>
+          <div class="tl tl-3"><span class="tc">├─</span><span class="tm">README.md</span></div>
+          <div class="tl tl-3"><span class="tc">├─</span><span class="td">metadata/</span></div>
+          <div class="tl tl-3"><span class="tc">├─</span><span class="td">transcripts/</span></div>
+          <div class="tl tl-3"><span class="tc">├─</span><span class="td">audio/</span></div>
+          <div class="tl tl-3"><span class="tc">└─</span><span class="td">video/</span></div>
+
+          <div class="tl-gap"></div>
+
+          <div class="tl tl-1"><span class="tc">└─</span><span class="td">scripts/</span><span class="tbadge">4 files</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tps1">_run_scribe_ingest.ps1</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tpy">organize_podcast_directory.py</span></div>
+          <div class="tl tl-2"><span class="tc">├─</span><span class="tpy">analyze_episode_alignment.py</span></div>
+          <div class="tl tl-2"><span class="tc">└─</span><span class="tpy">find_sync_offsets.py</span></div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+</div><!-- /layout -->
+
+</body>
+</html>
