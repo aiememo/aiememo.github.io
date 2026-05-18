@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaker Ops: Storage Scale &amp; Cost Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #fafafa;
+      --fg:           #09090b;
+      --card:         #ffffff;
+      --border:       #e4e4e7;
+      --muted:        #f4f4f5;
+      --muted-fg:     #71717a;
+      --teal:         #0d9488;
+      --teal-bg:      #f0fdfa;
+      --teal-border:  #99f6e4;
+      --amber:        #b45309;
+      --amber-fill:   #f59e0b;
+      --amber-bg:     #fffbeb;
+      --amber-border: #fde68a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+
+    /* ── Header ── */
+    .eyebrow {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: var(--muted);
+      color: var(--muted-fg);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4.5vw, 46px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted-fg);
+      max-width: 580px;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    /* ── KPI strip ── */
+    .kpi-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      font-size: 13px;
+    }
+
+    .kpi-label { color: var(--muted-fg); font-weight: 500; }
+    .kpi-div   { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+    .kpi-val   { font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .kpi-tip-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .kpi-tip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--muted);
+      color: var(--muted-fg);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: default;
+      flex-shrink: 0;
+    }
+    .kpi-tip-box {
+      position: absolute;
+      bottom: calc(100% + 7px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--fg);
+      color: var(--card);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.4;
+      padding: 6px 10px;
+      border-radius: 7px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 120ms ease;
+      z-index: 20;
+    }
+    .kpi-tip-wrap:hover .kpi-tip-box { opacity: 1; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      color: var(--muted-fg);
+      margin-top: 2px;
+    }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; }
+
+    th {
+      padding: 9px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      background: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafafa; }
+
+    .asset-name { font-size: 14px; font-weight: 600; line-height: 1.35; }
+    .asset-sub  { font-size: 12px; color: var(--muted-fg); margin-top: 2px; }
+
+    .size-val {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .share-cell { min-width: 200px; }
+
+    .share-pct {
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--muted-fg);
+      margin-bottom: 5px;
+    }
+
+    .bar-track {
+      height: 5px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 420ms cubic-bezier(0.16, 1, 0.32, 1);
+    }
+
+    .bar-teal  { background: var(--teal); }
+    .bar-amber { background: var(--amber-fill); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-teal  { color: var(--teal);  background: var(--teal-bg);  border-color: var(--teal-border); }
+    .badge-amber { color: var(--amber); background: var(--amber-bg); border-color: var(--amber-border); }
+
+    .card-footer {
+      padding: 14px 24px;
+      background: var(--muted);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted-fg);
+      line-height: 1.6;
+    }
+
+    /* ── Calculator ── */
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .calc-controls {
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .calc-results { padding: 20px 24px; }
+
+    /* Scenario quick-picks */
+    .scenario-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      margin-bottom: 8px;
+    }
+
+    .scenario-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 1px;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--fg);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 100ms, background 100ms;
+      text-align: left;
+    }
+
+    .scenario-btn .s-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted-fg);
+      line-height: 1;
+    }
+
+    .scenario-btn:hover { border-color: var(--teal-border); background: var(--teal-bg); }
+
+    .scenario-btn.active {
+      border-color: var(--teal);
+      background: var(--teal-bg);
+      color: var(--teal);
+    }
+
+    .scenario-btn.active .s-sub { color: var(--teal); opacity: 0.75; }
+
+    /* Fields */
+    .field { margin-bottom: 14px; }
+
+    .field-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+    }
+
+    .field-label span { font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--fg);
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 120ms;
+    }
+
+    select:focus, input[type="number"]:focus { border-color: var(--teal); }
+
+    /* Slider */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 5px;
+      border-radius: 999px;
+      appearance: none;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px var(--teal-border);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid #fff;
+      cursor: pointer;
+    }
+
+    .slider-num {
+      width: 52px;
+      text-align: center;
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--fg);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      outline: none;
+    }
+
+    .slider-num:focus { border-color: var(--teal); }
+
+    .preset-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--muted);
+      color: var(--muted-fg);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .calc-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted-fg);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Results */
+    .result-hero {
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .result-hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      margin-bottom: 6px;
+    }
+
+    .result-hero-value {
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .result-hero-sub {
+      font-size: 12px;
+      color: var(--muted-fg);
+      margin-top: 4px;
+    }
+
+    /* Drive impact bar */
+    .drive-impact {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+    }
+
+    .drive-impact-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .drive-impact-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+    }
+
+    .drive-impact-vals {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+    }
+
+    .drive-impact-vals span { display: flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
+    .drive-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-teal  { background: var(--teal); }
+    .dot-amber { background: var(--amber-fill); }
+
+    .drive-bar-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .drive-bar-library {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--amber-fill);
+      opacity: 0.3;
+      transition: width 420ms cubic-bezier(0.16, 1, 0.32, 1);
+    }
+
+    .drive-bar-one {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--teal);
+      transition: width 420ms cubic-bezier(0.16, 1, 0.32, 1);
+    }
+
+    .drive-bar-note {
+      font-size: 11px;
+      color: var(--muted-fg);
+      margin-top: 5px;
+    }
+
+    /* Result sections */
+    .result-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      margin-bottom: 8px;
+      margin-top: 14px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .result-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .result-card {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+    }
+
+    .result-card-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted-fg);
+      line-height: 1.35;
+    }
+
+    .result-card-val {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      margin-top: 4px;
+    }
+
+    .cmp-table {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cmp-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .cmp-row:last-child { border-bottom: none; }
+    .cmp-label { font-size: 12px; color: var(--muted-fg); line-height: 1.4; }
+    .cmp-val {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* ── Capacity & Cost card ── */
+    .cap-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .cap-left {
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .cap-right { padding: 20px 24px; }
+
+    /* Share link button */
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--card);
+      color: var(--muted-fg);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 120ms, color 120ms;
+      margin-top: 12px;
+    }
+
+    .share-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .share-btn.copied { border-color: var(--teal); color: var(--teal); background: var(--teal-bg); }
+
+    /* Cost table */
+    .cost-table {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cost-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 6px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .cost-row:last-child { border-bottom: none; }
+
+    .cost-row-head {
+      background: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .cost-provider { font-weight: 500; }
+
+    .cost-rate {
+      font-size: 11px;
+      color: var(--muted-fg);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cost-val {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .cost-placeholder { color: var(--muted-fg); font-weight: 400; font-size: 12px; font-style: italic; }
+
+    .nas-rate-input {
+      width: 72px;
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--fg);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      outline: none;
+      text-align: center;
+    }
+
+    .nas-rate-input:focus { border-color: var(--teal); }
+    .nas-rate-input::placeholder { color: var(--muted-fg); font-weight: 400; }
+
+    .cost-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted-fg);
+      line-height: 1.6;
+    }
+
+    .gws-context {
+      border-left: 2px solid var(--teal);
+      padding: 8px 10px;
+      background: var(--teal-bg);
+      border-radius: 6px;
+      font-size: 11px;
+      color: var(--muted-fg);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .gws-context strong { color: var(--teal); font-weight: 600; }
+
+    /* Sources */
+    .sources {
+      padding: 16px 24px;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 24px;
+    }
+
+    .sources li { font-size: 13px; }
+    .sources a { color: var(--teal); text-decoration: none; }
+    .sources a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .calc-layout, .cap-layout { grid-template-columns: 1fr; }
+      .calc-controls, .cap-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .sources { grid-template-columns: 1fr; }
+      .cost-row { grid-template-columns: 2fr 1fr 1fr; }
+      .cost-row > span:nth-child(4) { display: none; }
+      .cost-row-head > span:nth-child(4) { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 28px 16px 48px; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+      .result-grid, .result-grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="eyebrow">Storage Scale Reference</div>
+    <h1>How big is one talk?</h1>
+    <p class="subtitle">Using the Malte Ubl talk (18 min 51 sec) as a concrete anchor — from the YouTube download to estimated multi-angle raw footage.</p>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <span class="kpi-label">Likely multi-angle range</span>
+        <div class="kpi-div"></div>
+        <span class="kpi-val">26–130 GB</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Company drive today</span>
+        <div class="kpi-div"></div>
+        <span class="kpi-val">14 TB</span>
+        <span class="kpi-tip-wrap">
+          <span class="kpi-tip-icon">?</span>
+          <span class="kpi-tip-box">Google Workspace Business Standard pool capacity — not current used space (1.21 TB)</span>
+        </span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">AIE Europe content count</span>
+        <div class="kpi-div"></div>
+        <span class="kpi-val">182</span>
+      </div>
+    </div>
+
+    <!-- ── Calculator ── -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Camera-Based Storage Calculator</h2>
+        <p>Pick a scenario to start, then tune the camera, duration, and scale to your event.</p>
+      </div>
+      <div class="calc-layout">
+        <div class="calc-controls">
+          <div class="scenario-label">Start with a scenario</div>
+          <div class="scenario-strip">
+            <button class="scenario-btn" data-dur="20" data-angles="2" data-count="1">
+              Keynote
+              <span class="s-sub">20 min · 2 angles · 1 talk</span>
+            </button>
+            <button class="scenario-btn" data-dur="90" data-angles="2" data-count="1">
+              Workshop
+              <span class="s-sub">90 min · 2 angles · 1 talk</span>
+            </button>
+            <button class="scenario-btn" data-dur="480" data-angles="3" data-count="1">
+              Full Day
+              <span class="s-sub">480 min · 3 angles · 1 talk</span>
+            </button>
+            <button class="scenario-btn active" data-dur="19" data-angles="2" data-count="182">
+              AIE Europe
+              <span class="s-sub">19 min · 2 angles · 182 talks</span>
+            </button>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Camera Preset</div>
+            <select id="preset-select"></select>
+            <div class="preset-meta" id="preset-meta"></div>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Duration <span id="dur-display">19 min</span></div>
+            <div class="slider-wrap">
+              <input type="range" id="dur-slider" min="1" max="480" step="1" value="19">
+              <input class="slider-num" type="number" id="duration-minutes" min="1" step="1" value="19">
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Camera Angles <span id="ang-display">2 angles</span></div>
+            <div class="slider-wrap">
+              <input type="range" id="ang-slider" min="1" max="6" step="1" value="2">
+              <input class="slider-num" type="number" id="angle-count" min="1" max="6" step="1" value="2">
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Content Items</div>
+            <input type="number" id="content-count" min="1" step="1" value="182">
+          </div>
+
+          <div class="field">
+            <div class="field-label">Company Drive (GB)</div>
+            <input type="number" id="company-drive-gb" min="1" step="1" value="14000">
+          </div>
+
+          <p class="calc-note" id="preset-note"></p>
+
+          <button class="share-btn" id="share-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Copy shareable link
+          </button>
+        </div>
+
+        <div class="calc-results">
+          <div class="result-hero">
+            <div class="result-hero-label">Estimated Storage — Full Library</div>
+            <div class="result-hero-value" id="hero-total">—</div>
+            <div class="result-hero-sub" id="hero-sub"></div>
+          </div>
+
+          <div class="drive-impact">
+            <div class="drive-impact-header">
+              <div class="drive-impact-title">Share of Company Drive</div>
+              <div class="drive-impact-vals">
+                <span><div class="drive-dot dot-teal"></div> <span id="share-one-talk-label">one talk</span></span>
+                <span><div class="drive-dot dot-amber"></div> <span id="share-library-label">full library</span></span>
+              </div>
+            </div>
+            <div class="drive-bar-track">
+              <div class="drive-bar-library" id="drive-bar-library" style="width: 0%"></div>
+              <div class="drive-bar-one" id="drive-bar-one" style="width: 0%"></div>
+            </div>
+            <div class="drive-bar-note" id="drive-bar-note"></div>
+          </div>
+
+          <div class="result-section-label">Per Recording</div>
+          <div class="result-grid">
+            <div class="result-card">
+              <div class="result-card-label">Per min / angle</div>
+              <div class="result-card-val" id="per-minute">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-label">Per angle, full talk</div>
+              <div class="result-card-val" id="per-angle">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-label">All angles, one talk</div>
+              <div class="result-card-val" id="single-talk-total">—</div>
+            </div>
+          </div>
+
+          <div class="result-section-label">Full Library</div>
+          <div class="result-grid-2">
+            <div class="result-card">
+              <div class="result-card-label">Total storage</div>
+              <div class="result-card-val" id="library-total">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-label">Drive multiples</div>
+              <div class="result-card-val" id="drive-multiples">—</div>
+            </div>
+          </div>
+
+          <div class="cmp-table">
+            <div class="cmp-row">
+              <div class="cmp-label">vs. production-delivered file (2.96 GB)</div>
+              <div class="cmp-val" id="vs-production">—</div>
+            </div>
+            <div class="cmp-row">
+              <div class="cmp-label">vs. YouTube download (60 MB)</div>
+              <div class="cmp-val" id="vs-youtube">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        A practical reminder: workshops scale linearly. If a 20-minute talk becomes a 90-minute workshop, storage grows by 4.5× before you add more angles or step up to a heavier codec.
+      </div>
+    </div>
+
+    <!-- ── Capacity Limit & Storage Cost ── -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Capacity Limit &amp; Storage Cost</h2>
+        <p>Flip the question — given a storage budget, how many talks fit? Plus a monthly cost comparison across providers.</p>
+      </div>
+      <div class="cap-layout">
+        <div class="cap-left">
+          <div class="scenario-label">Storage Budget</div>
+          <div class="gws-context">
+            <strong>Google Workspace Business Standard</strong><br>
+            Est. pool: 14–34 TB &nbsp;·&nbsp; 7–17 licenses × 2 TB each<br>
+            Current usage: 1.21 TB &nbsp;(&lt;10% of minimum pool)
+          </div>
+          <div class="field">
+            <div class="field-label">Budget <span id="rev-budget-display">14 TB</span></div>
+            <div class="slider-wrap">
+              <input type="range" id="rev-budget-slider" min="0.1" max="50" step="0.1" value="14">
+              <input class="slider-num" type="number" id="rev-budget-tb" min="0.1" step="0.1" value="14">
+            </div>
+          </div>
+          <p class="calc-note">Uses the camera, duration, and angle count selected in the calculator above.</p>
+          <div class="result-hero" style="margin-top: 16px;">
+            <div class="result-hero-label">Max Talks That Fit</div>
+            <div class="result-hero-value" id="rev-max-talks">—</div>
+            <div class="result-hero-sub" id="rev-max-sub"></div>
+          </div>
+        </div>
+        <div class="cap-right">
+          <div class="scenario-label">Monthly Storage Cost — Full Library</div>
+          <div class="cost-table" style="margin-top: 8px;">
+            <div class="cost-row cost-row-head">
+              <span>Provider</span>
+              <span>Rate / GB</span>
+              <span>Monthly</span>
+              <span>Annual</span>
+            </div>
+            <div class="cost-row">
+              <span class="cost-provider">Backblaze B2</span>
+              <span class="cost-rate">$0.006</span>
+              <span class="cost-val" id="cost-b2-mo">—</span>
+              <span class="cost-val" id="cost-b2-yr">—</span>
+            </div>
+            <div class="cost-row">
+              <span class="cost-provider">Google Cloud Storage (Nearline)</span>
+              <span class="cost-rate">$0.010</span>
+              <span class="cost-val" id="cost-gcs-mo">—</span>
+              <span class="cost-val" id="cost-gcs-yr">—</span>
+            </div>
+            <div class="cost-row">
+              <span class="cost-provider">Amazon S3 Standard</span>
+              <span class="cost-rate">$0.023</span>
+              <span class="cost-val" id="cost-s3-mo">—</span>
+              <span class="cost-val" id="cost-s3-yr">—</span>
+            </div>
+            <div class="cost-row">
+              <span class="cost-provider">NAS — Synology DS1825+ ×2</span>
+              <span><input class="nas-rate-input" type="number" id="nas-rate" min="0" step="0.00001" value="0.00131" placeholder="$/GB/mo"></span>
+              <span class="cost-val" id="cost-nas-mo">—</span>
+              <span class="cost-val" id="cost-nas-yr">—</span>
+            </div>
+          </div>
+          <p class="cost-note">NAS rate based on 2× Synology DS1825+ (8-bay, 8× 20 TB drives, SHR-1 RAID), ~$10,000 hardware amortized over 5 years. ~127 TB usable per unit. Does not include power or maintenance. Cloud rates are storage-only and exclude egress.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Size Comparison (reactive) ── -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Size Comparison</h2>
+        <p>Malte Ubl talk runtime (18 min 51 sec) at the selected camera. Raw rows update live as you change the preset above.</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Approx Size</th>
+            <th>Share of Drive</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="asset-name">YouTube-downloaded Malte Ubl talk</div>
+              <div class="asset-sub">Heavily web-compressed derivative</div>
+            </td>
+            <td><span class="size-val">60 MB</span></td>
+            <td class="share-cell">
+              <div class="share-pct" id="cmp-yt-pct">&lt;0.01%</div>
+              <div class="bar-track"><div class="bar-fill bar-teal" style="width: 1px"></div></div>
+            </td>
+            <td><span class="badge badge-teal">Web Delivery</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="asset-name">Production-delivered Malte Ubl talk</div>
+              <div class="asset-sub">Compressed 1080p export, not camera-original footage</div>
+            </td>
+            <td><span class="size-val">2.96 GB</span></td>
+            <td class="share-cell">
+              <div class="share-pct" id="cmp-prod-pct">0.02%</div>
+              <div class="bar-track"><div class="bar-fill bar-teal" id="cmp-prod-bar" style="width: max(3px, 0.02%)"></div></div>
+            </td>
+            <td><span class="badge badge-teal">Delivery Master</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="asset-name">Estimated raw footage — 2 angles</div>
+              <div class="asset-sub" id="cmp-raw2-sub">Select a camera preset above</div>
+            </td>
+            <td><span class="size-val" id="cmp-raw2-size">—</span></td>
+            <td class="share-cell">
+              <div class="share-pct" id="cmp-raw2-pct">—</div>
+              <div class="bar-track"><div class="bar-fill bar-amber" id="cmp-raw2-bar" style="width: 0%"></div></div>
+            </td>
+            <td><span class="badge badge-amber">Raw Estimate</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="asset-name">Estimated raw footage — 3 angles</div>
+              <div class="asset-sub" id="cmp-raw3-sub">Select a camera preset above</div>
+            </td>
+            <td><span class="size-val" id="cmp-raw3-size">—</span></td>
+            <td class="share-cell">
+              <div class="share-pct" id="cmp-raw3-pct">—</div>
+              <div class="bar-track"><div class="bar-fill bar-amber" id="cmp-raw3-bar" style="width: 0%"></div></div>
+            </td>
+            <td><span class="badge badge-amber">Raw Estimate</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card-footer">
+        The two actual files do not preserve camera metadata — the YouTube file is a Google-generated download, the larger file is a compressed production export. Raw rows are calculated from the selected camera's official bitrate scaled to the 18:51 runtime.
+      </div>
+    </div>
+
+    <!-- ── Sources ── -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Preset Sources</h2>
+        <p>Calculator presets are grounded in official manufacturer documentation for each camera family and recording mode.</p>
+      </div>
+      <ul class="sources">
+        <li><a href="https://helpguide.sony.net/ilc/2070/v1/en/contents/TP0001140463.html">Sony ZV-E10 Help Guide</a></li>
+        <li><a href="https://downloads.canon.com/nw/specs/pdfs/EOSM50_MKII_Specifications-6-22_update.pdf">Canon EOS M50 Mark II Specifications</a></li>
+        <li><a href="https://helpguide.sony.net/ilc/2010/v1/en/print.pdf">Sony A7S III Help Guide</a></li>
+        <li><a href="https://helpguide.sony.net/ilc/2035/v1/en/contents/TP1000277924.html">Sony FX3 Help Guide</a></li>
+        <li><a href="https://helpguide.sony.net/pro/2063/v1/en/contents/TP1000266942.html">Sony FX6 Help Guide</a></li>
+        <li><a href="https://downloads.canon.com/nw/camera/products/eos/cinema/eos-c70/specifications/eos-c70-specifications.pdf">Canon C70 Specifications</a></li>
+        <li><a href="https://downloads.canon.com/nw/camera/products/eos/cinema/eos-c300-mark-iii/specifications/eos-c300-mark-iii-specifications.pdf">Canon C300 Mark III Specifications</a></li>
+        <li><a href="https://www.blackmagicdesign.com/products/blackmagicursabroadcast/techspecs/W-URSA-13">Blackmagic URSA Broadcast G2 Tech Specs</a></li>
+        <li><a href="https://docs.red.com/955-0196/955-0196_V1.7%20Rev-B%20RED%20PS%2C%20KOMODO%20Operation%20Guide%20HTML/Content/A_TechSpecs/Specs_KOMODO_6K.htm">RED KOMODO 6K Tech Specs</a></li>
+        <li><a href="https://docs.red.com/955-0196_v1.6/Content/4_Menus/ProjSet/R3D_Quality.htm">RED KOMODO R3D Quality Rates</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    const COMPANY_DRIVE_DEFAULT_GB = 14000;
+    const MALTE_YOUTUBE_GB         = 0.059273687;
+    const MALTE_PRODUCTION_GB      = 2.959233512;
+    const MALTE_DUR_MIN            = 18 + 51 / 60;
+
+    const CAMERA_PRESETS = [
+      { id: "sony-zv-e10-4k-xavc-s-60",                    category: "Creator Mirrorless",  label: "Sony ZV-E10 4K XAVC S 60 Mbps",                  resolution: "3840×2160", frameRate: "24p/25p/30p", codec: "XAVC S",         bitrateMbps: 60,   gbPerMinute: 0.45,  note: "Entry-level creator camera range. Useful as a lower-bound reference." },
+      { id: "sony-zv-e10-4k-xavc-s-100",                   category: "Creator Mirrorless",  label: "Sony ZV-E10 4K XAVC S 100 Mbps",                 resolution: "3840×2160", frameRate: "24p/25p/30p", codec: "XAVC S",         bitrateMbps: 100,  gbPerMinute: 0.75,  note: "Higher bitrate ZV-E10 4K mode." },
+      { id: "canon-eos-m50-mark-ii-1080p-ipb-60",          category: "Creator Mirrorless",  label: "Canon EOS M50 Mark II 1080p IPB 60 Mbps",         resolution: "1920×1080", frameRate: "59.94p",      codec: "IPB",            bitrateMbps: 60,   gbPerMinute: 0.45,  note: "A modest baseline for smaller hybrid cameras." },
+      { id: "canon-eos-m50-mark-ii-4k-ipb-120",            category: "Creator Mirrorless",  label: "Canon EOS M50 Mark II 4K IPB 120 Mbps",          resolution: "3840×2160", frameRate: "23.98p",      codec: "IPB",            bitrateMbps: 120,  gbPerMinute: 0.9,   note: "Canon 4K IPB mode — the jump from hobbyist to more serious file sizes." },
+      { id: "sony-a7siii-4k-xavc-s-150",                   category: "High-End Mirrorless", label: "Sony A7S III 4K XAVC S 150 Mbps",                resolution: "3840×2160", frameRate: "50p/60p",     codec: "XAVC S 4K",      bitrateMbps: 150,  gbPerMinute: 1.125, note: "High-end mirrorless, still in a manageable long-GOP storage class." },
+      { id: "sony-a7siii-4k-xavc-si-250",                  category: "High-End Mirrorless", label: "Sony A7S III 4K XAVC S-I 250 Mbps",              resolution: "3840×2160", frameRate: "25p",         codec: "XAVC S-I 4K",    bitrateMbps: 250,  gbPerMinute: 1.875, note: "A realistic jump once teams choose All-Intra quality for editability." },
+      { id: "sony-a7siii-4k-xavc-si-600",                  category: "High-End Mirrorless", label: "Sony A7S III 4K XAVC S-I 600 Mbps",              resolution: "3840×2160", frameRate: "60p",         codec: "XAVC S-I 4K",    bitrateMbps: 600,  gbPerMinute: 4.5,   note: "Shows how fast storage grows when frame rate and All-Intra quality stack up." },
+      { id: "sony-fx3-4k-xavc-si-600",                     category: "High-End Mirrorless", label: "Sony FX3 4K XAVC S-I 600 Mbps",                  resolution: "3840×2160", frameRate: "60p",         codec: "XAVC S-I 4K",    bitrateMbps: 600,  gbPerMinute: 4.5,   note: "Cinema-leaning mirrorless with similar storage behavior to an A7S III at the top end." },
+      { id: "sony-fx6-4k-xavc-l-150",                      category: "Broadcast / Cinema",  label: "Sony FX6 4K XAVC L 150 Mbps",                    resolution: "3840×2160", frameRate: "50p/60p",     codec: "XAVC L 4K",      bitrateMbps: 150,  gbPerMinute: 1.125, note: "Broadcast-leaning cinema camera with efficient long-GOP options." },
+      { id: "sony-fx6-4k-xavc-i-600",                      category: "Broadcast / Cinema",  label: "Sony FX6 4K XAVC I 600 Mbps",                    resolution: "3840×2160", frameRate: "59.94p",      codec: "XAVC I 4K",      bitrateMbps: 600,  gbPerMinute: 4.5,   note: "A useful reference for professionally operated conference cameras." },
+      { id: "canon-c70-4k-xf-avc-longgop-260",             category: "Broadcast / Cinema",  label: "Canon C70 4K XF-AVC Long GOP 260 Mbps",           resolution: "4096×2160", frameRate: "25p/30p",     codec: "XF-AVC Long GOP",bitrateMbps: 260,  gbPerMinute: 1.95,  note: "Professional Canon cinema baseline with manageable but meaningful storage." },
+      { id: "canon-c70-4k-xf-avc-intra-410",               category: "Broadcast / Cinema",  label: "Canon C70 4K XF-AVC Intra 410 Mbps",             resolution: "4096×2160", frameRate: "25p/30p",     codec: "XF-AVC Intra",   bitrateMbps: 410,  gbPerMinute: 3.075, note: "A realistic polished-conference preset when quality and editability both matter." },
+      { id: "canon-c300-mark-iii-4k-xf-avc-intra-410",     category: "Broadcast / Cinema",  label: "Canon C300 Mark III 4K XF-AVC Intra 410 Mbps",   resolution: "3840×2160", frameRate: "25p/30p",     codec: "XF-AVC Intra",   bitrateMbps: 410,  gbPerMinute: 3.075, note: "Strong professional reference for multi-camera conference production." },
+      { id: "blackmagic-ursa-broadcast-g2-uhd-braw-8-1",   category: "Broadcast / Cinema",  label: "Blackmagic URSA Broadcast G2 UHD BRAW 8:1",      resolution: "3840×2160", frameRate: "25p/30p",     codec: "BRAW 8:1",       bitrateMbps: 384,  gbPerMinute: 2.88,  note: "Blackmagic publishes an explicit data rate for this mode in their tech specs." },
+      { id: "blackmagic-ursa-broadcast-g2-uhd-prores-422-hq", category: "Broadcast / Cinema", label: "Blackmagic URSA Broadcast G2 UHD ProRes 422 HQ", resolution: "3840×2160", frameRate: "25p/30p",  codec: "ProRes 422 HQ",  bitrateMbps: 880,  gbPerMinute: 6.6,   note: "A high-quality professional conference reference with very large files per angle." },
+      { id: "blackmagic-ursa-broadcast-g2-6k-braw-8-1",    category: "Broadcast / Cinema",  label: "Blackmagic URSA Broadcast G2 6K BRAW 8:1",       resolution: "6144×3456", frameRate: "24p/25p/30p", codec: "BRAW 8:1",       bitrateMbps: 752,  gbPerMinute: 5.64,  note: "Once conference coverage moves to 6K BRAW, storage planning changes dramatically." },
+      { id: "red-komodo-6k-r3d-lq",                        category: "Broadcast / Cinema",  label: "RED KOMODO 6K R3D LQ",                           resolution: "6144×3240", frameRate: "23.98p",      codec: "REDCODE RAW LQ", bitrateMbps: 880,  gbPerMinute: 6.6,   note: "RED's lower-quality raw option is still a very large storage commitment." },
+      { id: "red-komodo-6k-r3d-mq",                        category: "Broadcast / Cinema",  label: "RED KOMODO 6K R3D MQ",                           resolution: "6144×3240", frameRate: "23.98p",      codec: "REDCODE RAW MQ", bitrateMbps: 1400, gbPerMinute: 10.5,  note: "A realistic premium-cinema benchmark for event footage." },
+      { id: "red-komodo-6k-r3d-hq",                        category: "Broadcast / Cinema",  label: "RED KOMODO 6K R3D HQ",                           resolution: "6144×3240", frameRate: "23.98p",      codec: "REDCODE RAW HQ", bitrateMbps: 2240, gbPerMinute: 16.8,  note: "The kind of preset that makes a single event archive explode in size." }
+    ];
+
+    // ── DOM refs ──────────────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    const presetSelect   = $("preset-select");
+    const presetMeta     = $("preset-meta");
+    const presetNote     = $("preset-note");
+    const durSlider      = $("dur-slider");
+    const durNum         = $("duration-minutes");
+    const angSlider      = $("ang-slider");
+    const angNum         = $("angle-count");
+    const contentInput   = $("content-count");
+    const driveInput     = $("company-drive-gb");
+    const revBudgetSlider = $("rev-budget-slider");
+    const revBudgetNum   = $("rev-budget-tb");
+    const nasRateInput   = $("nas-rate");
+    const shareBtn       = $("share-btn");
+
+    // ── Preset dropdown ───────────────────────────────────────────────────────
+    (function buildPresets() {
+      const groups = new Map();
+      for (const p of CAMERA_PRESETS) {
+        if (!groups.has(p.category)) groups.set(p.category, []);
+        groups.get(p.category).push(p);
+      }
+      for (const [label, presets] of groups) {
+        const og = document.createElement("optgroup");
+        og.label = label;
+        for (const p of presets) {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = p.label;
+          og.appendChild(opt);
+        }
+        presetSelect.appendChild(og);
+      }
+      presetSelect.value = "blackmagic-ursa-broadcast-g2-uhd-prores-422-hq";
+    })();
+
+    function getPreset() {
+      return CAMERA_PRESETS.find(p => p.id === presetSelect.value) || CAMERA_PRESETS[0];
+    }
+
+    // ── Formatters ────────────────────────────────────────────────────────────
+    function fmt(gb) {
+      if (gb < 1)    return `${(gb * 1000).toFixed(0)} MB`;
+      if (gb < 10)   return `${gb.toFixed(2)} GB`;
+      if (gb < 100)  return `${gb.toFixed(1)} GB`;
+      if (gb < 1000) return `${gb.toFixed(0)} GB`;
+      return `${(gb / 1000).toFixed(2)} TB`;
+    }
+
+    function fmtPct(v) {
+      if (v < 0.01) return "<0.01%";
+      if (v < 1)    return `${v.toFixed(2)}%`;
+      return `${v.toFixed(1)}%`;
+    }
+
+    function fmtMult(v) {
+      if (v >= 10000) return `${Math.round(v / 1000)}k×`;
+      if (v >= 1000)  return `${(v / 1000).toFixed(1)}k×`;
+      if (v >= 100)   return `${v.toFixed(0)}×`;
+      if (v >= 10)    return `${v.toFixed(1)}×`;
+      return `${v.toFixed(2)}×`;
+    }
+
+    function fmtCost(usd) {
+      if (!isFinite(usd) || usd <= 0) return "—";
+      if (usd < 1)     return `$${usd.toFixed(2)}`;
+      if (usd < 1000)  return `$${Math.round(usd).toLocaleString()}`;
+      if (usd < 10000) return `$${(usd / 1000).toFixed(1)}k`;
+      return `$${Math.round(usd / 1000).toLocaleString()}k`;
+    }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    // ── Animated number counter ───────────────────────────────────────────────
+    const animState = {};
+
+    function animateTo(id, target, formatFn, duration = 380) {
+      const el = $(id);
+      if (!el) return;
+      if (!animState[id]) animState[id] = { current: target, rafId: null };
+      const state = animState[id];
+      if (state.rafId) { cancelAnimationFrame(state.rafId); state.rafId = null; }
+      const from = state.current;
+      if (from === target) { el.textContent = formatFn(target); return; }
+      const start = performance.now();
+      function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        const v = from + (target - from) * ease;
+        state.current = v;
+        el.textContent = formatFn(v);
+        if (t < 1) { state.rafId = requestAnimationFrame(tick); }
+        else { state.current = target; el.textContent = formatFn(target); state.rafId = null; }
+      }
+      state.rafId = requestAnimationFrame(tick);
+    }
+
+    // ── URL state ─────────────────────────────────────────────────────────────
+    function syncUrl() {
+      const params = new URLSearchParams({
+        preset:  presetSelect.value,
+        dur:     durNum.value,
+        angles:  angNum.value,
+        count:   contentInput.value,
+        drive:   driveInput.value,
+        budget:  revBudgetNum.value,
+      });
+      const nasVal = nasRateInput.value;
+      if (nasVal) params.set("nas", nasVal);
+      history.replaceState(null, "", location.pathname + "?" + params.toString());
+    }
+
+    function loadFromUrl() {
+      const p = new URLSearchParams(location.search);
+      if (p.has("preset") && CAMERA_PRESETS.find(x => x.id === p.get("preset")))
+        presetSelect.value = p.get("preset");
+      if (p.has("dur")) {
+        const dur = Number(p.get("dur"));
+        durNum.value = dur;
+        durSlider.value = clamp(dur, 1, 480);
+      }
+      if (p.has("angles")) {
+        const ang = Number(p.get("angles"));
+        angNum.value = ang;
+        angSlider.value = clamp(ang, 1, 6);
+      }
+      if (p.has("count"))  contentInput.value = p.get("count");
+      if (p.has("drive"))  driveInput.value   = p.get("drive");
+      if (p.has("budget")) {
+        const bud = Number(p.get("budget"));
+        revBudgetNum.value    = bud;
+        revBudgetSlider.value = clamp(bud, 0.1, 50);
+      }
+      if (p.has("nas")) nasRateInput.value = p.get("nas");
+    }
+
+    // ── Main update ───────────────────────────────────────────────────────────
+    function update() {
+      const preset  = getPreset();
+      const dur     = Math.max(1, Number(durNum.value)    || 1);
+      const angles  = Math.max(1, Number(angNum.value)    || 1);
+      const count   = Math.max(1, Number(contentInput.value) || 1);
+      const driveGb = Math.max(1, Number(driveInput.value) || COMPANY_DRIVE_DEFAULT_GB);
+
+      const perMin    = preset.gbPerMinute;
+      const perAngle  = perMin * dur;
+      const oneTalk   = perAngle * angles;
+      const library   = oneTalk * count;
+      const shareTalk = (oneTalk / driveGb) * 100;
+      const shareLib  = (library / driveGb) * 100;
+      const driveX    = library / driveGb;
+      const vsProd    = oneTalk / MALTE_PRODUCTION_GB;
+      const vsYt      = oneTalk / MALTE_YOUTUBE_GB;
+
+      // Preset meta chips
+      presetMeta.innerHTML = "";
+      for (const text of [`${preset.bitrateMbps} Mbps`, preset.codec, preset.resolution, preset.frameRate]) {
+        const chip = document.createElement("span");
+        chip.className = "meta-chip";
+        chip.textContent = text;
+        presetMeta.appendChild(chip);
+      }
+      presetNote.textContent = preset.note;
+
+      // Slider labels
+      $("dur-display").textContent = `${dur} min`;
+      $("ang-display").textContent = `${angles} angle${angles !== 1 ? "s" : ""}`;
+
+      // Hero
+      $("hero-sub").textContent = `${dur} min · ${angles} angle${angles !== 1 ? "s" : ""} · ${count} item${count !== 1 ? "s" : ""}`;
+
+      // Animate numbers
+      animateTo("hero-total",        library,  fmt);
+      animateTo("per-minute",        perMin,   fmt);
+      animateTo("per-angle",         perAngle, fmt);
+      animateTo("single-talk-total", oneTalk,  fmt);
+      animateTo("library-total",     library,  fmt);
+      animateTo("drive-multiples",   driveX,   fmtMult);
+      animateTo("vs-production",     vsProd,   fmtMult);
+      animateTo("vs-youtube",        vsYt,     fmtMult);
+
+      // Drive bars (CSS transition handles animation)
+      $("drive-bar-one").style.width     = clamp(shareTalk, 0, 100) + "%";
+      $("drive-bar-library").style.width = clamp(shareLib,  0, 100) + "%";
+
+      $("share-one-talk-label").textContent = fmtPct(shareTalk) + " (one talk)";
+      $("share-library-label").textContent  = fmtPct(shareLib)  + " (library)";
+      $("drive-bar-note").textContent = shareLib > 100
+        ? `Library is ${fmtMult(driveX)} the ${fmt(driveGb)} pool — would need ${Math.ceil(driveX)} drives.`
+        : `Library fills ${fmtPct(shareLib)} of the ${fmt(driveGb)} pool.`;
+
+      // Live comparison table (anchored to Malte Ubl 18:51 runtime)
+      const camSub  = `${preset.bitrateMbps} Mb/s ${preset.codec} · ${preset.resolution}`;
+      const raw2gb  = preset.gbPerMinute * MALTE_DUR_MIN * 2;
+      const raw3gb  = preset.gbPerMinute * MALTE_DUR_MIN * 3;
+      const raw2pct = raw2gb / driveGb * 100;
+      const raw3pct = raw3gb / driveGb * 100;
+
+      // Static rows — recalc against current drive value
+      const ytPct   = MALTE_YOUTUBE_GB    / driveGb * 100;
+      const prodPct = MALTE_PRODUCTION_GB / driveGb * 100;
+      $("cmp-yt-pct").textContent   = ytPct < 0.01 ? "<0.01%" : fmtPct(ytPct);
+      $("cmp-prod-pct").textContent = fmtPct(prodPct);
+      $("cmp-prod-bar").style.width = `max(3px, ${clamp(prodPct, 0, 100)}%)`;
+
+      $("cmp-raw2-sub").textContent = camSub;
+      $("cmp-raw3-sub").textContent = camSub;
+      $("cmp-raw2-pct").textContent = fmtPct(raw2pct);
+      $("cmp-raw3-pct").textContent = fmtPct(raw3pct);
+      $("cmp-raw2-bar").style.width = clamp(raw2pct, 0, 100) + "%";
+      $("cmp-raw3-bar").style.width = clamp(raw3pct, 0, 100) + "%";
+      animateTo("cmp-raw2-size", raw2gb, fmt);
+      animateTo("cmp-raw3-size", raw3gb, fmt);
+
+      // Reverse calc & costs use same library value
+      updateCapacity(oneTalk, library);
+
+      syncUrl();
+    }
+
+    // ── Capacity & cost update ────────────────────────────────────────────────
+    function updateCapacity(oneTalk, library) {
+      // Reverse: how many talks fit in the budget?
+      const budgetTb = Math.max(0.1, Number(revBudgetNum.value) || 14);
+      const budgetGb = budgetTb * 1000;
+      $("rev-budget-display").textContent = budgetTb % 1 === 0 ? `${budgetTb} TB` : `${budgetTb.toFixed(1)} TB`;
+
+      const maxTalks = oneTalk > 0 ? Math.floor(budgetGb / oneTalk) : 0;
+      animateTo("rev-max-talks", maxTalks, v => Math.max(0, Math.floor(v)).toLocaleString());
+      $("rev-max-sub").textContent = oneTalk > 0
+        ? `${fmt(oneTalk)} per talk · ${fmt(budgetGb)} budget`
+        : "—";
+
+      // Cloud costs
+      const rates = { b2: 0.006, gcs: 0.010, s3: 0.023 };
+      for (const [key, rate] of Object.entries(rates)) {
+        const mo = library * rate;
+        animateTo(`cost-${key}-mo`, mo, fmtCost);
+        animateTo(`cost-${key}-yr`, mo * 12, fmtCost);
+      }
+
+      // NAS cost
+      const nasRate = parseFloat(nasRateInput.value);
+      if (isFinite(nasRate) && nasRate > 0) {
+        const nasMo = library * nasRate;
+        animateTo("cost-nas-mo", nasMo, fmtCost);
+        animateTo("cost-nas-yr", nasMo * 12, fmtCost);
+      } else {
+        $("cost-nas-mo").innerHTML = '<span class="cost-placeholder">enter rate →</span>';
+        $("cost-nas-yr").textContent = "—";
+        if (animState["cost-nas-mo"]) delete animState["cost-nas-mo"];
+        if (animState["cost-nas-yr"]) delete animState["cost-nas-yr"];
+      }
+    }
+
+    // ── Event listeners ───────────────────────────────────────────────────────
+    durSlider.addEventListener("input",  () => { durNum.value    = durSlider.value;                    update(); });
+    durNum.addEventListener("input",     () => { durSlider.value = clamp(Number(durNum.value), 1, 480); update(); });
+    angSlider.addEventListener("input",  () => { angNum.value    = angSlider.value;                    update(); });
+    angNum.addEventListener("input",     () => { angSlider.value = clamp(Number(angNum.value), 1, 6);  update(); });
+
+    presetSelect.addEventListener("change", update);
+    contentInput.addEventListener("input",  update);
+    driveInput.addEventListener("input",    update);
+
+    revBudgetSlider.addEventListener("input", () => { revBudgetNum.value = revBudgetSlider.value; update(); });
+    revBudgetNum.addEventListener("input",    () => { revBudgetSlider.value = clamp(Number(revBudgetNum.value), 0.1, 50); update(); });
+
+    nasRateInput.addEventListener("input", update);
+
+    // Scenario buttons
+    document.querySelectorAll(".scenario-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".scenario-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const dur    = Number(btn.dataset.dur);
+        const angles = Number(btn.dataset.angles);
+        const count  = Number(btn.dataset.count);
+        durNum.value       = dur;     durSlider.value  = clamp(dur, 1, 480);
+        angNum.value       = angles;  angSlider.value  = clamp(angles, 1, 6);
+        contentInput.value = count;
+        update();
+      });
+    });
+
+    // Deactivate scenario button on manual input
+    [durNum, durSlider, angNum, angSlider, contentInput].forEach(el =>
+      el.addEventListener("input", () =>
+        document.querySelectorAll(".scenario-btn").forEach(b => b.classList.remove("active"))
+      )
+    );
+
+    // Share button
+    shareBtn.addEventListener("click", () => {
+      syncUrl();
+      navigator.clipboard.writeText(location.href).then(() => {
+        shareBtn.textContent = "✓ Link copied!";
+        shareBtn.classList.add("copied");
+        setTimeout(() => {
+          shareBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Copy shareable link`;
+          shareBtn.classList.remove("copied");
+        }, 2000);
+      });
+    });
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    loadFromUrl();
+    update();
+  </script>
+</body>
+</html>
