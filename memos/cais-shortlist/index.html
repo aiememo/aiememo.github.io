@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIE × CAIS — Research Paper Spotlight</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            aie: '#f8df8c',
+            'aie-50': '#fefce8',
+            'aie-100': '#fdf3c0',
+            warm: '#f9f7f3',
+            'warm-100': '#f0ede7',
+            ink: '#1a1814',
+            'ink-light': '#6b6560',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            card: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+            'card-selected': '0 0 0 1.5px #f8df8c, 0 2px 8px rgba(248,223,140,0.2)',
+            sticky: '0 -1px 0 rgba(0,0,0,0.08), 0 -4px 12px rgba(0,0,0,0.06)',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #f9f7f3;
+      color: #1a1814;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Card base */
+    .paper-card {
+      background: #fff;
+      border: 1px solid #e8e4de;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      overflow: hidden;
+    }
+    .paper-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .paper-card.selected {
+      background: #fffef5;
+      border-color: #f8df8c;
+      box-shadow: 0 0 0 1.5px #f8df8c, 0 2px 8px rgba(248,223,140,0.15);
+    }
+    .paper-card.selected .card-left-bar {
+      opacity: 1;
+    }
+    .card-left-bar {
+      width: 3px;
+      background: #f8df8c;
+      align-self: stretch;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      border-radius: 0;
+    }
+
+    /* Custom checkbox */
+    .paper-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #d0ccc6;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color 0.1s, background 0.1s;
+    }
+    .paper-check:checked {
+      background: #f8df8c;
+      border-color: #f8df8c;
+    }
+    .paper-check:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #1a1814;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .paper-check:hover:not(:checked) {
+      border-color: #f8df8c;
+    }
+
+    /* Why AIE pill */
+    .why-pill {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 6px;
+      background: #fef9e7;
+      border: 1px solid #f3d46e;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #7c5c00;
+    }
+    .why-pill .why-icon {
+      flex-shrink: 0;
+      font-size: 11px;
+      margin-top: 1px;
+      opacity: 0.7;
+    }
+
+    /* Org pill */
+    .org-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      background: #f0ede7;
+      color: #6b6560;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    /* Pillar tag */
+    .pillar-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #b0a89e;
+    }
+
+    /* Expand button */
+    .expand-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #b0a89e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.1s;
+      white-space: nowrap;
+    }
+    .expand-btn:hover {
+      color: #1a1814;
+    }
+    .expand-btn .chevron {
+      transition: transform 0.2s ease;
+      font-size: 10px;
+    }
+    .expand-btn.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Abstract body */
+    .card-body {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
+      opacity: 0;
+    }
+    .card-body.open {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    /* Section divider */
+    .section-rule {
+      border: none;
+      border-top: 2px solid #f8df8c;
+      margin: 0;
+    }
+
+    /* Tier badge */
+    .tier-badge-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f8df8c;
+      color: #1a1814;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .tier-badge-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0ede7;
+      color: #6b6560;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    /* Sticky bar */
+    #sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid #e8e4de;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.07);
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 50;
+    }
+    #sticky-bar.visible {
+      transform: translateY(0);
+    }
+
+    /* Copy button */
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1814;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .copy-btn:hover {
+      background: #2d2926;
+    }
+    .copy-btn.copied {
+      background: #4a7c59;
+    }
+
+    /* Number badge */
+    .num-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f0ede7;
+      color: #b0a89e;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .paper-card.selected .num-badge {
+      background: #f8df8c;
+      color: #7c5c00;
+    }
+
+    /* CAIS link */
+    .cais-link {
+      font-size: 12px;
+      color: #b0a89e;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.1s;
+    }
+    .cais-link:hover {
+      color: #1a1814;
+    }
+
+    /* Author list */
+    .author-line {
+      font-size: 12px;
+      color: #8c8580;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-32">
+
+  <!-- Header -->
+  <div class="border-b border-warm-100" style="background: #fff;">
+    <div class="max-w-2xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-3 mb-5">
+        <div style="height: 28px; width: 4px; background: #f8df8c; border-radius: 2px; flex-shrink: 0;"></div>
+        <div>
+          <div class="text-xs font-semibold tracking-widest uppercase text-ink-light" style="letter-spacing: 0.12em; color: #b0a89e;">AIE Worlds Fair 2026</div>
+          <h1 class="text-2xl font-bold leading-tight" style="color: #1a1814; letter-spacing: -0.02em;">CAIS Research Paper Spotlight</h1>
+        </div>
+      </div>
+      <p class="text-sm leading-relaxed" style="color: #6b6560; max-width: 480px;">
+        61 papers accepted to CAIS 2026. We pre-screened for practitioner resonance and AIE audience fit.
+        <strong style="color: #1a1814; font-weight: 600;">Mark your picks</strong> — we'll handle author outreach and logistics.
+      </p>
+      <div class="flex items-center gap-4 mt-4">
+        <div class="text-xs font-medium" style="color: #b0a89e;">
+          <span class="font-semibold" style="color: #f0b429;">16</span> shortlisted &nbsp;·&nbsp;
+          <span class="font-semibold" style="color: #1a1814;">10</span> primary picks &nbsp;·&nbsp;
+          <span class="font-semibold" style="color: #6b6560;">6</span> alternates
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto px-6 pt-8 space-y-10">
+
+    <!-- TIER 1 -->
+    <section>
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span class="tier-badge-primary">★ Spotlight Picks</span>
+          <span class="text-sm font-medium" style="color: #b0a89e;">10 papers</span>
+        </div>
+        <span class="text-xs" style="color: #b0a89e;">Our highest-confidence recommendations</span>
+      </div>
+
+      <div class="space-y-3" id="tier1-list">
+
+        <!-- Paper 1 -->
+        <div class="paper-card" data-id="1" data-tier="1" data-title="optimize_anything: Unified Text Optimization can Outperform Specialized Systems">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">UC Berkeley</span>
+                    <span class="org-pill">MIT</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">optimize_anything: Unified Text Optimization can Outperform Specialized Systems</h3>
+                    <div class="num-badge shrink-0">1</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    General optimization system for agent programs — matches existing demo picks thematically, Berkeley/MIT pedigree
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">optany is a single LLM-based optimization system that achieves state-of-the-art results across six diverse tasks simultaneously — nearly tripling Gemini Flash's ARC-AGI accuracy, cutting cloud scheduling costs 40%, and matching AlphaEvolve on circle packing — by framing all problems as improving a text artifact evaluated by a scoring function. The results challenge the assumption that domain-specific optimization tools are necessary.</p>
+                      <p class="author-line mt-2">Lakshya Agrawal, Donghyun Lee, Shangyin Tan +11 · UC Berkeley; Omar Khattab · MIT</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/optany-unified-text-optimization-can-outperform-specialized-systems/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 2 -->
+        <div class="paper-card" data-id="2" data-tier="1" data-title="A Language for Describing Agentic LLM Contexts">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">Bar Ilan University</span>
+                    <span class="org-pill">AI2</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">A Language for Describing Agentic LLM Contexts</h3>
+                    <div class="num-badge shrink-0">2</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Context engineering is core AIE — this is the research-layer version of the "analyzable contexts" UX Swyx already flagged
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">A formal language for precisely describing how LLM context is composed and evolves across agent interaction steps, replacing the informal prose and ad-hoc diagrams currently used in context engineering. It enables teams and researchers to communicate context structure unambiguously — across prompt templates, multi-turn history, and system instructions.</p>
+                      <p class="author-line mt-2">Noga Peleg Pelc, Gal A. Kaminka, Yoav Goldberg · Bar Ilan University; Ai2</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/a-language-for-describing-agentic-llm-contexts/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 3 -->
+        <div class="paper-card" data-id="3" data-tier="1" data-title="Open Agent Specification: Enabling Cross-Framework Comparison of AI Agents">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">Oracle</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Open Agent Specification: Enabling Cross-Framework Comparison of AI Agents</h3>
+                    <div class="num-badge shrink-0">3</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Standards-layer portability across agent frameworks — exactly the kind of foundational work AIE practitioners care about
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">Open Agent Specification is a framework-agnostic declarative language for defining AI agents and multi-agent workflows, enabling portability and interoperability across agent frameworks. It provides common abstractions for control flow, data semantics, and tool integration so that workflows built in one framework can run in another.</p>
+                      <p class="author-line mt-2">Soufiane Amini, Yassine Benajiba, Cesare Bernardis +17 · Oracle</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/open-agent-specification-a-unified-representation-for-ai-agents/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 4 -->
+        <div class="paper-card" data-id="4" data-tier="1" data-title="ViBench: A Benchmark on Vibe Coding">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Evaluation &amp; Benchmarking</span>
+                    <span class="org-pill">Replit</span>
+                    <span class="org-pill">CMU</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">ViBench: A Benchmark on Vibe Coding</h3>
+                    <div class="num-badge shrink-0">4</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Straight down the middle — production traces, end-to-end vibe coding eval, Replit + CMU credibility
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">ViBench is the first open-source benchmark for evaluating AI agents on realistic end-to-end vibe coding — natural-language-to-working-web-application creation — derived from production traces across 15 applications. It measures the complete development process rather than isolated code completion, revealing where the current generation of agents breaks down in practice.</p>
+                      <p class="author-line mt-2">Peter Zhong, Pashootan Vaezipoor, Fuyang Cui +17 · Replit; Carnegie Mellon University; Georgian AI Lab</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/vibench-a-benchmark-on-vibe-coding/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 5 -->
+        <div class="paper-card" data-id="5" data-tier="1" data-title="Willful Disobedience: Automatically Detecting Failures in Agentic Traces">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Evaluation &amp; Benchmarking</span>
+                    <span class="org-pill">UW</span>
+                    <span class="org-pill">Microsoft Research</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Willful Disobedience: Automatically Detecting Failures in Agentic Traces</h3>
+                    <div class="num-badge shrink-0">5</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Observability + trace-level validation — the "beyond toy demos" AIE mindset, misses critical failures outcome-only evals can't see
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">AgentPex automatically detects procedural failures in agentic execution traces — wrong workflow routing, unsafe tool use, violations of prompt-specified rules — by extracting behavioral rules from agent prompts and checking entire execution histories against them. It catches critical failures that outcome-only benchmarks miss, making it practical to validate agent behavior at the workflow level.</p>
+                      <p class="author-line mt-2">Reshabh K Sharma, Shraddha Barke, Benjamin Zorn · University of Washington; Microsoft Research</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/willful-disobedience-automatically-detecting-failures-in-agentic-traces/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 6 -->
+        <div class="paper-card" data-id="6" data-tier="1" data-title="Dossier: Deep Research via Ledger-Driven Branching Search and Query Encoding Learning">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">MIT</span>
+                    <span class="org-pill">Notre Dame</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Dossier: Deep Research via Ledger-Driven Branching Search and Query Encoding Learning</h3>
+                    <div class="num-badge shrink-0">6</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Live theme (deep research) + compound-agent architecture — parallel branching with a Research Ledger, not generic RAG
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">Dossier is a deep research agent that replaces linear search trajectories with parallel branching search, tracking claims, contradictions, and information gaps in a persistent Research Ledger. It consistently outperforms ReAct-style agents on multi-hop research tasks by preventing early retrieval failures from compounding through the reasoning chain.</p>
+                      <p class="author-line mt-2">Om Chabra, Omar Khattab, Hari Balakrishnan · MIT; Noah Ziems, Meng Jiang · Notre Dame</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/dossier-deep-research-via-ledger-driven-branching-search-and-query-encoding-lear/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 7 -->
+        <div class="paper-card" data-id="7" data-tier="1" data-title="Securing Agents With Tracked Capabilities">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Security &amp; Privacy</span>
+                    <span class="org-pill">EPFL</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Securing Agents With Tracked Capabilities</h3>
+                    <div class="num-badge shrink-0">7</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    PL-level security for agents using Scala 3 capture checking — elegant, differentiated, far more credible than runtime heuristics
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">A type-system-based safety harness for AI agents that uses Scala 3's capture checking to statically track which resources and effects an agent can access, preventing prompt injection, data leakage, and unintended side effects at the programming-language level rather than at runtime heuristics.</p>
+                      <p class="author-line mt-2">Martin Odersky, Yaoyu Zhao, Yichen Xu, Oliver Bračevac, Cao Nguyen Pham · EPFL</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/securing-agents-with-tracked-capabilities/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 8 -->
+        <div class="paper-card" data-id="8" data-tier="1" data-title="Securing the Agent: Vendor-Neutral, Multitenant Enterprise Retrieval and Tool Use">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Security &amp; Privacy</span>
+                    <span class="org-pill">Red Hat AI</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Securing the Agent: Vendor-Neutral, Multitenant Enterprise Retrieval and Tool Use</h3>
+                    <div class="num-badge shrink-0">8</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Enterprise bridge — open-source Llama Stack, multi-tenant RAG isolation, real deployment concerns not just benchmark claims
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">An open-source, vendor-neutral architecture (Llama Stack) for enterprise RAG and agentic systems that enforces multi-tenant isolation, policy-aware access control, and regulatory compliance at the retrieval layer. It addresses a fundamental flaw in standard RAG: relevance-based retrieval can surface one tenant's confidential data to another tenant simply because it scores highest.</p>
+                      <p class="author-line mt-2">Francisco Javier Arceo, Varsha Prasad Narsing · Red Hat AI</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/securing-the-agent-vendor-neutral-multitenant-enterprise-retrieval-and-tool-use/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 9 -->
+        <div class="paper-card" data-id="9" data-tier="1" data-title="SEAR: Schema-Based Evaluation and Routing for LLM Gateways">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Engineering &amp; Operations</span>
+                    <span class="org-pill">Strukto.AI</span>
+                    <span class="org-pill">Infron.AI</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">SEAR: Schema-Based Evaluation and Routing for LLM Gateways</h3>
+                    <div class="num-badge shrink-0">9</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    ~100 typed, SQL-queryable eval signals driving LLM gateway routing — high practical relevance for anyone running multi-provider infra
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">SEAR is a production evaluation and routing system for multi-model LLM gateways that exposes ~100 typed, SQL-queryable quality signals — covering intent, response characteristics, issue attribution, and scores — to drive fine-grained routing decisions across providers. It makes LLM gateway behavior observable and steerable in a way that provider-level metrics alone cannot.</p>
+                      <p class="author-line mt-2">Zecheng Zhang · Strukto.AI; Han Zheng, Yue Xu · Infron.AI</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/sear-schema-based-evaluation-and-routing-for-llm-gateways/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper 10 -->
+        <div class="paper-card" data-id="10" data-tier="1" data-title="Scalable Inference Architectures for Compound AI Systems: A Production Deployment Study">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Engineering &amp; Operations</span>
+                    <span class="org-pill">Salesforce</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Scalable Inference Architectures for Compound AI Systems: A Production Deployment Study</h3>
+                    <div class="num-badge shrink-0">10</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Agentforce + ApexGuru — real systems at enterprise scale, hard-won lessons that pure academic papers don't include
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">A production deployment study from Salesforce describing the modular, platform-agnostic inference architecture behind Agentforce and ApexGuru, sharing hard-won lessons on serving concurrent, heterogeneous compound AI workloads at enterprise scale. The paper provides concrete architectural patterns for cost-effective, low-latency multi-model serving that academic treatments typically omit.</p>
+                      <p class="author-line mt-2">Srikanta Prasad Sondekoppam Vijayashankar, Utkarsh Arora · Salesforce India</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/scalable-inference-architectures-for-compound-ai-systems-a-production-deployment/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TIER 2 -->
+    <section>
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span class="tier-badge-secondary">◦ Good Alternates</span>
+          <span class="text-sm font-medium" style="color: #b0a89e;">6 papers</span>
+        </div>
+        <span class="text-xs" style="color: #b0a89e;">Swap in or expand if you want more depth</span>
+      </div>
+
+      <div class="space-y-3" id="tier2-list">
+
+        <!-- Alt 1 -->
+        <div class="paper-card" data-id="11" data-tier="2" data-title="Vibe Code Bench: Evaluating AI Models on End-to-End Web Application Development">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Evaluation &amp; Benchmarking</span>
+                    <span class="org-pill">Vals AI</span>
+                    <span class="org-pill">MIT</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Vibe Code Bench: Evaluating AI Models on End-to-End Web Application Development</h3>
+                    <div class="num-badge shrink-0">A1</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Second vibe coding benchmark — browser-evaluated, 100 specs, frontier models only at 58%. Swap for ViBench or keep both
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">Vibe Code Bench is a benchmark of 100 web application specifications with over 10,000 browser-evaluated substeps showing that even the best frontier models complete only 58% of realistic end-to-end application development tasks. The benchmark uses an autonomous browser agent to verify deployed applications against behavioral specifications, measuring what users actually care about rather than code syntax.</p>
+                      <p class="author-line mt-2">Hung Tran, Langston Nashold, Rayan Krishnan, Antoine Bigeard · Vals AI; Alex Gu · MIT</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/vibe-code-bench-evaluating-ai-models-on-end-to-end-web-application-development/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alt 2 -->
+        <div class="paper-card" data-id="12" data-tier="2" data-title="TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">Rutgers</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples</h3>
+                    <div class="num-badge shrink-0">A2</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Formal verification for multi-agent coordination — nerd-snappy, differentiated, generates TLA+-verified protocols from natural language
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">TraceFix is a verification-first pipeline that synthesizes TLA+-verified coordination protocols for multi-agent systems, compiles them into per-agent system prompts, and enforces them at runtime with a monitor that rejects out-of-topology operations. It provides formal correctness guarantees for multi-agent coordination from nothing more than a natural-language task description.</p>
+                      <p class="author-line mt-2">Shuren Xia, Qiwei Li, Taqiya Ehsan, Jorge Ortiz · Rutgers University</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/tracefix-repairing-agent-coordination-protocols-with-tla-counterexamples/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alt 3 -->
+        <div class="paper-card" data-id="13" data-tier="2" data-title="The Verifier Tax: Horizon Dependent Safety–Success Tradeoffs in Tool Using LLM Agents">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Security &amp; Privacy</span>
+                    <span class="org-pill">Johns Hopkins</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">The Verifier Tax: Horizon Dependent Safety–Success Tradeoffs in Tool Using LLM Agents</h3>
+                    <div class="num-badge shrink-0">A3</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Concrete empirical framing of the safety/capability tradeoff — gives practitioners the 15–30 turn horizon where safety enforcement bites
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">An empirical study quantifying the 'Verifier Tax' — the persistent reduction in task success rate caused by adding runtime safety enforcement to tool-using LLM agents. The results show a model-dependent Safety-Capability Gap with interaction horizons of 15–30 turns beyond which safety enforcement dominates, giving practitioners concrete guidance on where safety and capability trade-offs bite.</p>
+                      <p class="author-line mt-2">Tanmay Sah · Harrisburg University; Vishal Srivastava · Johns Hopkins University; Dolly Sah · University of Utah</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/the-verifier-tax-horizon-dependent-safety-success-tradeoffs-in-tool-using-llm-ag/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alt 4 -->
+        <div class="paper-card" data-id="14" data-tier="2" data-title="Why Johnny Can't Use Agents: Industry Aspirations vs. User Realities with AI Agents">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Evaluation &amp; Benchmarking</span>
+                    <span class="org-pill">CMU</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">Why Johnny Can't Use Agents: Industry Aspirations vs. User Realities with AI Agents</h3>
+                    <div class="num-badge shrink-0">A4</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Sharp counter-hype — 102 commercial agents, 31 users, surfaces the marketing vs. actual UX gap that practitioners are living
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">A mixed-methods study of 102 commercial AI agents and 31 end-user participants that quantifies the gap between what the industry markets AI agents as being able to do and what real users can actually accomplish. The findings surface recurring usability failure patterns and call into question whether current agent UX is ready for the mainstream use cases being advertised.</p>
+                      <p class="author-line mt-2">Pradyumna Shome, Sashreek Krishnan, Sauvik Das · Carnegie Mellon University</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/why-johnny-cant-use-agents-industry-aspirations-vs-user-realities-with-ai-agents/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alt 5 -->
+        <div class="paper-card" data-id="15" data-tier="2" data-title="XGrammar-2: Dynamic and Efficient Structured Generation Engine for Agentic LLMs">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">System Optimization</span>
+                    <span class="org-pill">CMU</span>
+                    <span class="org-pill">SJTU</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">XGrammar-2: Dynamic and Efficient Structured Generation Engine for Agentic LLMs</h3>
+                    <div class="num-badge shrink-0">A5</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Infrastructure for tool-calling and structured outputs — dynamic schemas, cross-request reuse, Tianqi Chen (CMU/TVM) lineage
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">XGrammar++ is a structured generation engine for agentic LLM workloads that efficiently handles dynamic, variable tool-calling schemas by supporting tag-triggered structure switching and fine-grained cross-request reuse. It substantially reduces latency and overhead for production systems that mix diverse tool-call schemas within and across requests.</p>
+                      <p class="author-line mt-2">Linzhang Li, Guanjie Wang, Ziyi Xu · SJTU; Yixin Dong, Alexander Jiang, Tianqi Chen · CMU</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/xgrammar-dynamic-and-efficient-structured-generation-engine-for-agentic-llms/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alt 6 -->
+        <div class="paper-card" data-id="16" data-tier="2" data-title="FORGE: Self-Evolving Agent Memory With No Weight Updates via Population Broadcast">
+          <div class="flex">
+            <div class="card-left-bar"></div>
+            <div class="flex-1 p-4">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" class="paper-check mt-0.5" onchange="handleCheck(this)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span class="pillar-tag">Architectural Patterns</span>
+                    <span class="org-pill">Carleton University</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-sm font-semibold leading-snug" style="color: #1a1814;">FORGE: Self-Evolving Agent Memory With No Weight Updates via Population Broadcast</h3>
+                    <div class="num-badge shrink-0">A6</div>
+                  </div>
+                  <div class="why-pill mt-2 mb-3">
+                    <span class="why-icon">→</span>
+                    Self-improving agent memory through competitive selection — no gradient updates, just the same base LLM doing reflection
+                  </div>
+                  <button class="expand-btn" onclick="toggleExpand(this)">
+                    <span>Abstract + authors</span>
+                    <span class="chevron">▾</span>
+                  </button>
+                  <div class="card-body">
+                    <div class="pt-3 pb-1">
+                      <p class="text-sm leading-relaxed" style="color: #4a4540;">FORGE is a population-based protocol in which LLM agents self-generate and evolve natural-language memory — textual heuristics and few-shot demonstrations — through reflection and competitive selection across episodes. It improves agent decision-making over time with no gradient updates, using only the same base LLM that the agent runs on.</p>
+                      <p class="author-line mt-2">Igor Bogdanov, Chung-Horng Lung, Thomas Kunz, Jie Gao · Carleton University; Adrian Taylor · Defence R&D Canada</p>
+                      <a href="https://www.caisconf.org/program/2026/papers/forge-self-evolving-agent-memory-with-no-weight-updates-via-population-broadcast/" class="cais-link mt-2" target="_blank">View on CAIS ↗</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer note -->
+    <div class="text-xs text-center pb-6" style="color: #c8c3bc;">
+      Prepared by AIE · May 2026 · From 61 CAIS-accepted research papers
+    </div>
+
+  </div>
+
+  <!-- Sticky bar -->
+  <div id="sticky-bar" class="px-6 py-4">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+      <div>
+        <span class="text-sm font-semibold" style="color: #1a1814;" id="selected-count">0 selected</span>
+        <span class="text-sm" style="color: #b0a89e;"> · reply with your picks or copy the list</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="clearAll()" class="text-xs font-medium" style="color: #b0a89e; background: none; border: none; cursor: pointer; padding: 4px 0;">Clear</button>
+        <button class="copy-btn" onclick="copyList()" id="copy-btn">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 5V3.5A1.5 1.5 0 009.5 2H3.5A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Copy list
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const selected = new Set();
+
+    function handleCheck(checkbox) {
+      const card = checkbox.closest('.paper-card');
+      const id = parseInt(card.dataset.id);
+      if (checkbox.checked) {
+        selected.add(id);
+        card.classList.add('selected');
+      } else {
+        selected.delete(id);
+        card.classList.remove('selected');
+      }
+      updateStickyBar();
+    }
+
+    function updateStickyBar() {
+      const bar = document.getElementById('sticky-bar');
+      const countEl = document.getElementById('selected-count');
+      const n = selected.size;
+      countEl.textContent = n === 1 ? '1 paper selected' : `${n} papers selected`;
+      if (n > 0) {
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function clearAll() {
+      selected.clear();
+      document.querySelectorAll('.paper-check').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.paper-card').classList.remove('selected');
+      });
+      updateStickyBar();
+    }
+
+    function copyList() {
+      const cards = document.querySelectorAll('.paper-card');
+      const tier1 = [], tier2 = [];
+      cards.forEach(card => {
+        const id = parseInt(card.dataset.id);
+        if (selected.has(id)) {
+          const title = card.dataset.title;
+          const tier = card.dataset.tier;
+          if (tier === '1') tier1.push(title);
+          else tier2.push(title);
+        }
+      });
+
+      let text = 'AIE × CAIS Research Paper Spotlight — Selections\n';
+      text += '='.repeat(52) + '\n\n';
+      if (tier1.length) {
+        text += 'Spotlight Picks:\n';
+        tier1.forEach((t, i) => text += `  ${i + 1}. ${t}\n`);
+        text += '\n';
+      }
+      if (tier2.length) {
+        text += 'Alternates:\n';
+        tier2.forEach((t, i) => text += `  A${i + 1}. ${t}\n`);
+        text += '\n';
+      }
+      text += `Total: ${selected.size} paper${selected.size !== 1 ? 's' : ''} selected`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H3.5A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/></svg> Copy list`;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function toggleExpand(btn) {
+      const body = btn.closest('.paper-card').querySelector('.card-body');
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open');
+      btn.classList.toggle('open');
+      btn.querySelector('span:first-child').textContent = isOpen ? 'Abstract + authors' : 'Collapse';
+    }
+  </script>
+
+</body>
+</html>
