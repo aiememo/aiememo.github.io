@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keynote Speaker Guide — AI Engineer World's Fair 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          coral:  '#F2603C', // Workshops
+          expo:    '#9333EA', // Expo Sessions
+          breakout:'#2F80ED', // Breakouts
+          keynote: '#10B981', // Keynotes
+          navy:    '#1F2433',
+          indigo:  '#5B5BD6',
+          ink:     '#0A0A0B',
+          mutedfg: '#6B7280',
+          line:    '#E5E7EB',
+          surface: '#F6F7F9',
+        },
+        fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','sans-serif'] },
+        borderRadius: { xl: '0.85rem' },
+      }
+    }
+  }
+</script>
+<style>
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;}
+  [id]{scroll-margin-top:88px;}
+  ::selection{background:#5B5BD6;color:#fff;}
+</style>
+</head>
+<body class="bg-surface text-ink antialiased">
+
+  <!-- STICKY TOP BAR -->
+  <header class="sticky top-0 z-40 border-b border-line bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-3">
+      <div class="flex items-center gap-3">
+        <span class="text-sm font-black uppercase tracking-[0.12em] text-ink">AI Engineer World's Fair</span>
+        <span class="hidden sm:inline-block text-xs font-semibold uppercase tracking-[0.18em] text-keynote border-l border-line pl-3">Keynote Speaker Guide</span>
+        <span class="inline-flex items-center rounded-full border border-keynote/20 bg-keynote/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-keynote">v1</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-5 text-sm font-medium text-mutedfg">
+        <a href="#journey" class="hover:text-ink transition-colors">Journey</a>
+        <a href="#deadlines" class="hover:text-ink transition-colors">Deadlines</a>
+        <a href="#av" class="hover:text-ink transition-colors">AV</a>
+        <a href="#rehearsal" class="hover:text-ink transition-colors">Rehearsal</a>
+        <a href="#stage" class="hover:text-ink transition-colors">Stage</a>
+        <a href="#onsite" class="hover:text-ink transition-colors">Onsite</a>
+      </nav>
+      <a href="mailto:speakers@ai.engineer" class="inline-flex items-center rounded-lg bg-ink px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition-colors">Contact</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-5">
+
+    <!-- HERO -->
+    <section class="pt-12 pb-8">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-keynote">Keynote Speaker Guide · 2026</p>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-extrabold leading-[1.03] tracking-tight">Everything you need<br>to take the keynote stage.</h1>
+      <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-mutedfg">
+        You're on the main stage — the talks that carry this event on YouTube. This guide covers the full keynote process: your topic call, deck submission, your <span class="font-semibold text-ink">required rehearsal</span>, and how show day runs. It's a <span class="font-semibold text-ink">live document</span>; all timings are tentative until the schedule locks.
+      </p>
+      <p class="mt-3 text-sm text-mutedfg">Presenting a breakout, workshop, or expo session instead? Use the <a href="../speakers/" class="font-semibold text-breakout hover:underline">Speaker Onsite Guide →</a></p>
+      <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold">
+        <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-keynote"></span>Moscone West</span>
+        <span class="text-mutedfg font-medium">June 29 – July 2, 2026</span>
+        <span class="text-mutedfg font-medium">San Francisco, CA</span>
+      </div>
+    </section>
+
+    <!-- AT A GLANCE -->
+    <section class="pb-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="rounded-xl border border-line bg-white p-4 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedfg">Talk Length</p>
+          <p class="mt-1 text-lg font-extrabold">18 minutes</p>
+          <p class="text-xs text-mutedfg">Hard limit · 20 min on the public schedule</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-4 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedfg">Rehearsal</p>
+          <p class="mt-1 text-lg font-extrabold">Required</p>
+          <p class="text-xs text-mutedfg">Keynote-only · we'll email your time block</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-4 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedfg">Slides</p>
+          <p class="mt-1 text-lg font-extrabold">16:9 · 1080p</p>
+          <p class="text-xs text-mutedfg">Submitted in advance · no 4K</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-4 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedfg">Questions</p>
+          <p class="mt-1 text-lg font-extrabold">We're here</p>
+          <a href="mailto:speakers@ai.engineer" class="text-xs font-semibold text-breakout hover:underline">speakers@ai.engineer</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ JOURNEY ============ -->
+    <section id="journey" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-keynote"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Start here</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Your keynote in four steps</h2>
+      <p class="mt-2 text-sm text-mutedfg">Work them in order. Steps 1–2 happen now; steps 3–4 happen onsite.</p>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-keynote/10 text-sm font-extrabold text-keynote">1</div>
+          <h3 class="mt-3 font-bold">Topic call with Swyx</h3>
+          <p class="mt-1 text-sm text-mutedfg">Shape your angle so the talk lands. <a href="#deadlines" class="font-semibold text-breakout hover:underline">Book it →</a></p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-keynote/10 text-sm font-extrabold text-keynote">2</div>
+          <h3 class="mt-3 font-bold">Submit your deck</h3>
+          <p class="mt-1 text-sm text-mutedfg">Native file + fonts, even as a WIP. <a href="#av" class="font-semibold text-breakout hover:underline">Specs →</a></p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-keynote/10 text-sm font-extrabold text-keynote">3</div>
+          <h3 class="mt-3 font-bold">Rehearse onsite</h3>
+          <p class="mt-1 text-sm text-mutedfg">Required. Locks your house-computer flow. <a href="#rehearsal" class="font-semibold text-breakout hover:underline">Details →</a></p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-keynote/10 text-sm font-extrabold text-keynote">4</div>
+          <h3 class="mt-3 font-bold">Take the stage</h3>
+          <p class="mt-1 text-sm text-mutedfg">Green room 30 min prior; we run the rest. <a href="#stage" class="font-semibold text-breakout hover:underline">Show day →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEADLINES ============ -->
+    <section id="deadlines" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-coral"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Get set up</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Confirmations &amp; Deadlines</h2>
+      <p class="mt-2 text-sm text-mutedfg">Complete these early so your session is accurate across the website, app, and program.</p>
+
+      <div class="mt-5 overflow-hidden rounded-xl border border-line bg-white shadow-sm">
+        <table class="w-full text-sm">
+          <thead class="bg-surface text-left text-[11px] uppercase tracking-wider text-mutedfg">
+            <tr><th class="px-4 py-3 font-bold">Item</th><th class="px-4 py-3 font-bold hidden sm:table-cell">Action</th><th class="px-4 py-3 font-bold text-right">Deadline</th></tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            <tr><td class="px-4 py-3 font-medium">Topic call with Swyx to shape your keynote</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="#">Book a call</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-bold text-coral">ASAP</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Register your account in the Speaker Portal (Accel)</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="#">Register Accel</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-bold text-coral">ASAP</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Complete Speaker Onboarding Form (logistics)</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="https://ai.engineer/invite/speakers">Onboarding form</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-bold text-coral">ASAP</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Upload name, bio, headshot, session title &amp; abstract in Accel</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="#">Edit profile</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-surface px-2.5 py-0.5 text-xs font-bold text-mutedfg">TBD</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Complete AV Questionnaire (audio, demo &amp; house-computer needs)</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="#">AV form</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-surface px-2.5 py-0.5 text-xs font-bold text-mutedfg">TBD</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Upload deck, font files (ttf/otf) &amp; any recorded demo backup</td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="#">Google Drive</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-coral/10 px-2.5 py-0.5 text-xs font-bold text-coral">WIP ASAP · final TBD</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Confirm your rehearsal time block</td><td class="px-4 py-3 hidden sm:table-cell"><span class="text-mutedfg">We'll email you</span></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-surface px-2.5 py-0.5 text-xs font-bold text-mutedfg">TBD</span></td></tr>
+            <tr><td class="px-4 py-3 font-medium">Post your talk on X and tag <span class="font-semibold">@aiDotEngineer</span></td><td class="px-4 py-3 hidden sm:table-cell"><a class="font-semibold text-breakout hover:underline" href="https://x.com/aiDotEngineer">@aiDotEngineer</a></td><td class="px-4 py-3 text-right"><span class="inline-flex rounded-full bg-surface px-2.5 py-0.5 text-xs font-bold text-mutedfg">At your leisure</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER PORTAL ============ -->
+    <section id="portal" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-expo"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Your profile</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Speaker Portal (Accel)</h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Complete or update</h3>
+          <p class="mt-1 text-sm text-mutedfg">Used to populate the event website and app.</p>
+          <ul class="mt-3 space-y-1.5 text-sm">
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-expo"></span>Speaker name</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-expo"></span>Speaker bio</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-expo"></span>Speaker headshot</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-expo"></span>Session title</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-expo"></span>Session abstract</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Editing deadline &amp; abstract rules</h3>
+          <p class="mt-2 text-sm">You have full editing access until <span class="font-semibold">[TBD] at 5:00 PM PT</span>. After that, submissions lock for programming production.</p>
+          <div class="mt-3 rounded-lg bg-surface p-3 text-sm">
+            <p class="font-semibold">When submitting your abstract:</p>
+            <ul class="mt-1.5 space-y-1 text-mutedfg">
+              <li>· Do not include images, media, or links.</li>
+              <li>· Media won't be published in the program listing.</li>
+            </ul>
+          </div>
+          <p class="mt-3 text-xs text-mutedfg">Session time slots are not yet confirmed and will be shared once the schedule is finalized.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRESENTATION & AV ============ -->
+    <section id="av" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-keynote"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Your deck</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Presentation &amp; AV</h2>
+      <p class="mt-2 text-sm text-mutedfg">The keynote stage runs on the <span class="font-semibold text-ink">house computer</span> — you present from our system, not your laptop, so your deck and fonts must reach us in advance.</p>
+
+      <!-- spec cards -->
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="rounded-xl border border-line bg-white p-5 text-center shadow-sm">
+          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-surface text-lg">🖥️</div>
+          <p class="mt-2 text-[11px] font-bold uppercase tracking-wider text-mutedfg">Screen</p>
+          <p class="font-extrabold">16:9 · Full screen</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 text-center shadow-sm">
+          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-surface text-lg">↔️</div>
+          <p class="mt-2 text-[11px] font-bold uppercase tracking-wider text-mutedfg">Resolution</p>
+          <p class="font-extrabold">1920 × 1080</p>
+          <span class="mt-2 inline-block rounded-md bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">NO 4K CONTENT</span>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 text-center shadow-sm">
+          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-surface text-lg">🖼️</div>
+          <p class="mt-2 text-[11px] font-bold uppercase tracking-wider text-mutedfg">Still Images</p>
+          <p class="font-extrabold">.PNG / .JPG</p>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Submitting your deck</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· Upload your <strong>native format</strong> with fonts (ttf/otf) and media <strong>embedded</strong> — not a PDF or SlideShare link.</li>
+            <li>· Upload even if incomplete — mark it <strong>WIP</strong>. The AV team stages and tests from this version.</li>
+            <li>· Bring a <strong>USB copy</strong> of your final deck to rehearsal as a backstop.</li>
+            <li>· Submit via the <a href="#" class="font-semibold text-breakout hover:underline">Google Drive link</a> before EOD <span class="italic text-mutedfg">[TBD]</span>.</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Audio &amp; the house system</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· <strong>Playing audio or video with sound?</strong> Flag it on the AV questionnaire — this is the most-missed item, and you must hold the rights to anything you play.</li>
+            <li>· You present from the <strong>house computer</strong> and advance with the provided slide advancer.</li>
+            <li>· Want to present from your own laptop instead? Tell us on the AV form so we can plan for it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- live demo backup callout -->
+      <div class="mt-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <span class="text-xl leading-none">🎬</span>
+        <div class="text-sm">
+          <p class="font-bold text-amber-800">Live demos require a recorded backup — submitted in advance.</p>
+          <p class="mt-1 text-amber-900/80">You'll have internet access, but keep a backup that doesn't need it: a fully local option or a recorded simulation. Upload the recording alongside your native slides.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REHEARSAL ============ -->
+    <section id="rehearsal" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-red-500"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Don't skip this</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Rehearsal — Required</h2>
+
+      <div class="mt-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
+        <span class="text-xl leading-none">🎤</span>
+        <div class="text-sm">
+          <p class="font-bold text-red-700">Every keynote speaker rehearses. No exceptions.</p>
+          <p class="mt-1 text-red-900/80">Rehearsal is the only time you'll run your deck on the house computer with the confidence monitor and walk-on before you're live. It's how we catch surprises — not on show day.</p>
+        </div>
+      </div>
+
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">When</h3>
+          <p class="mt-1 text-sm text-mutedfg">At Moscone West on <span class="font-semibold italic">[TBD date]</span>. We rehearse in open blocks — e.g. a morning block and an afternoon block — and you drop in anytime within your assigned window. Your slot runs about <strong class="text-ink">15 minutes</strong>.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">What to bring</h3>
+          <p class="mt-1 text-sm text-mutedfg">Everything you'll present with — laptop, adapters, and a USB copy of your deck. We'll have radio comms to the AV team throughout.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Your block</h3>
+          <p class="mt-1 text-sm text-mutedfg">We'll email your rehearsal window and a calendar invite. Reply right away if it doesn't work — locking these blocks early is what keeps the day on schedule.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STAGE ============ -->
+    <section id="stage" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-indigo"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Show time</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Stage Direction &amp; Main Stage Guide</h2>
+
+      <!-- stage render placeholder -->
+      <div class="mt-5 flex items-start gap-3 rounded-xl border border-dashed border-line bg-white p-4 text-sm text-mutedfg">
+        <span class="text-xl leading-none">🗺️</span>
+        <p><strong class="text-ink">Coming soon:</strong> a render of the keynote stage from the audience and the floor plan, so you know exactly what you're walking into. We'll drop it here once production finalizes the layout.</p>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Walk-on &amp; walk-off</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· Be in the green room <strong>30 min before</strong> your talk.</li>
+            <li>· Walk to the center-stage mark — your mic is <strong>live the moment you hit the stage</strong>.</li>
+            <li>· Finish, take in the applause, then exit the way you came on.</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Mic &amp; slide advancer</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· Go to the audio tech <strong>during the break before your block</strong> to get mic'd up.</li>
+            <li>· Use the <strong>house slide advancer</strong> from the house computer.</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Confidence monitor &amp; timer</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· Two downstage monitors: one mirrors slides, one shows speaker notes.</li>
+            <li>· Notes show <strong>only from the house computer</strong> + advancer.</li>
+            <li>· A timer counts down from <strong>18 minutes</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Presenting from your laptop?</h3>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            <li>· Only if you've cleared it on the AV form. Bring it to the <strong>tech table during the break</strong> before your talk.</li>
+            <li>· Your speaker notes <strong>won't</strong> show on the downstage monitors — but will show in Presenter Mode on your own screen.</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Stage presence</h3>
+          <p class="mt-1 text-sm text-mutedfg">We strongly recommend stepping away from the podium and using the house computer + advancer:</p>
+          <ul class="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+            <li>· Connect with the audience</li>
+            <li>· Looks more professional</li>
+            <li>· Cleaner changeovers</li>
+            <li>· It's more fun!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-line bg-white p-5 shadow-sm">
+        <h3 class="font-bold">Arrival &amp; time limits</h3>
+        <ul class="mt-2 space-y-1.5 text-sm">
+          <li>· Arrive <strong>30 min before the block starts</strong> — not your talk time. If your talk is 10:00 but the block opens at 9:00, arrive by 8:30. Last in the block? You may need to arrive earlier.</li>
+          <li>· Talks are <strong>18 minutes</strong> (schedule says 20 to allow a 2-min changeover). These are <strong>hard limits</strong> — going over risks costly union overtime, and we'll have to play you off.</li>
+        </ul>
+      </div>
+
+      <!-- Session day rhythm -->
+      <div class="mt-4 rounded-xl border border-line bg-white p-5 shadow-sm">
+        <div class="flex items-baseline justify-between">
+          <h3 class="font-bold">Session day rhythm</h3>
+          <p class="text-xs text-mutedfg">45-min blocks · 2 × 18-min talks + wrap · 5-min breaks</p>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <div class="rounded-lg bg-navy px-3 py-2 text-xs font-bold text-white text-center">Keynotes<span class="block font-medium opacity-80">9:00–10:30</span></div>
+          <div class="rounded-lg bg-indigo px-3 py-2 text-xs font-bold text-white text-center">Block 1<span class="block font-medium opacity-80">10:45–11:30</span></div>
+          <div class="rounded-lg bg-indigo px-3 py-2 text-xs font-bold text-white text-center">Block 2<span class="block font-medium opacity-80">11:40–12:25</span></div>
+          <div class="rounded-lg bg-surface px-3 py-2 text-xs font-bold text-mutedfg text-center">Lunch<span class="block font-medium">12:30–1:30</span></div>
+          <div class="rounded-lg bg-indigo px-3 py-2 text-xs font-bold text-white text-center">Block 3<span class="block font-medium opacity-80">1:30–2:15</span></div>
+          <div class="rounded-lg bg-indigo px-3 py-2 text-xs font-bold text-white text-center">Block 4<span class="block font-medium opacity-80">2:25–3:10</span></div>
+          <div class="rounded-lg bg-indigo px-3 py-2 text-xs font-bold text-white text-center">Block 5<span class="block font-medium opacity-80">3:20–4:05</span></div>
+          <div class="rounded-lg bg-navy px-3 py-2 text-xs font-bold text-white text-center">Closing<span class="block font-medium opacity-80">4:30–5:30</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRAVEL ============ -->
+    <section id="travel" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-breakout"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Getting here</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Travel &amp; Venue Logistics</h2>
+
+      <!-- hotel / World Cup note -->
+      <div class="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <span class="text-xl leading-none">⚠️</span>
+        <div class="text-sm">
+          <p class="font-bold text-amber-800">Book early — all three blocks are open, but the city is busy.</p>
+          <p class="mt-1 text-amber-900/80">A FIFA World Cup match at Levi's Stadium on <strong>July 1</strong> is driving citywide demand and pushing flight prices up. Our official blocks are available now — grab one before they fill, and book flights ASAP.</p>
+        </div>
+      </div>
+
+      <div class="mt-5 grid gap-4 lg:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm lg:col-span-1">
+          <h3 class="font-bold">Main Venue</h3>
+          <p class="mt-1 text-sm font-semibold">Moscone West</p>
+          <p class="text-sm text-mutedfg">800 Howard Street<br>San Francisco, CA 94103</p>
+          <h3 class="mt-4 font-bold">Badge Pickup</h3>
+          <p class="mt-1 text-sm text-mutedfg">At Moscone West. Tell the team you're a <span class="font-semibold text-ink">speaker</span> and register <span class="font-semibold text-ink">before</span> entering conference spaces.</p>
+          <h3 class="mt-4 font-bold">Registration Hours <span class="font-medium text-mutedfg">(tentative)</span></h3>
+          <ul class="mt-1 space-y-1 text-sm">
+            <li class="flex justify-between"><span>Sun, Jun 28</span><span class="text-mutedfg">5:00–9:00 PM</span></li>
+            <li class="flex justify-between"><span>Mon, Jun 29</span><span class="text-mutedfg">8:00 AM–5:00 PM</span></li>
+            <li class="flex justify-between"><span>Tue, Jun 30</span><span class="text-mutedfg">8:00 AM–5:00 PM</span></li>
+            <li class="flex justify-between"><span>Wed, Jul 1</span><span class="text-mutedfg">8:00 AM–5:00 PM</span></li>
+            <li class="flex justify-between"><span>Thu, Jul 2</span><span class="text-mutedfg">8:00 AM–1:00 PM</span></li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm lg:col-span-2">
+          <h3 class="font-bold">Official AIE Hotel Blocks</h3>
+          <div class="mt-3 grid gap-3 sm:grid-cols-3">
+            <a href="https://book.passkey.com/e/51164469" class="group rounded-lg border border-line p-3.5 transition-colors hover:border-breakout">
+              <p class="text-sm font-bold leading-snug">SF Marriott Marquis</p>
+              <p class="mt-1 text-xs font-semibold text-breakout group-hover:underline">Book via Passkey →</p>
+            </a>
+            <a href="https://www.ihg.com/hotels/us/en/find-hotels/select-roomrate?fromRedirect=true&qSrt=sAV&qIta=99801505&icdv=99801505&qSlH=sfohb&qGrpCd=ae3&qAAR=6CBARC&qRtP=6CBARC" class="group rounded-lg border border-line p-3.5 transition-colors hover:border-breakout">
+              <p class="text-sm font-bold leading-snug">InterContinental SF</p>
+              <p class="mt-1 text-xs text-mutedfg">Rate code <span class="font-bold text-ink">CBARC</span></p>
+              <p class="mt-1 text-xs font-semibold text-breakout group-hover:underline">Book via IHG →</p>
+            </a>
+            <a href="https://book.passkey.com/e/51180684" class="group rounded-lg border border-line p-3.5 transition-colors hover:border-breakout">
+              <p class="text-sm font-bold leading-snug">Hilton Parc 55 SF</p>
+              <p class="mt-1 text-xs font-semibold text-breakout group-hover:underline">Book via Passkey →</p>
+            </a>
+          </div>
+
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-lg bg-surface p-3.5 text-sm">
+              <p class="font-bold">If we're covering your hotel</p>
+              <p class="mt-1 text-mutedfg">Don't book independently — AIE books directly from your onboarding dates. We cover up to <strong class="text-ink">2 nights domestic</strong> / <strong class="text-ink">3 nights international</strong>. Extra nights are on you.</p>
+            </div>
+            <div class="rounded-lg bg-surface p-3.5 text-sm">
+              <p class="font-bold">If we're covering your flight</p>
+              <p class="mt-1 text-mutedfg">We reimburse one round-trip <strong class="text-ink">economy</strong> flight after the event. Book ASAP and <a href="https://airtable.com/appo0K8UQdLHWncXl/pagYU3J6LHDH5OA2C/form" class="font-semibold text-breakout hover:underline">submit the reimbursement form</a> with confirmation &amp; receipts.</p>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-mutedfg">San Francisco in July: roughly 65–70°F by day, dropping to the mid-50s at night with cool, foggy mornings. Bring a jacket.</p>
+        </div>
+      </div>
+
+      <!-- Visa -->
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">US Entry — Visa Waiver (ESTA)</h3>
+          <p class="mt-1 text-sm text-mutedfg">Citizens of Visa Waiver Program countries must apply for an ESTA before travelling.</p>
+          <dl class="mt-3 grid grid-cols-2 gap-2 text-sm">
+            <div class="rounded-lg bg-surface p-2.5"><dt class="text-xs text-mutedfg">Apply at</dt><dd class="font-semibold"><a href="https://esta.cbp.dhs.gov" class="text-breakout hover:underline">esta.cbp.dhs.gov</a></dd></div>
+            <div class="rounded-lg bg-surface p-2.5"><dt class="text-xs text-mutedfg">Cost</dt><dd class="font-semibold">$21 USD</dd></div>
+            <div class="rounded-lg bg-surface p-2.5"><dt class="text-xs text-mutedfg">Processing</dt><dd class="font-semibold">Usually instant · up to 72h</dd></div>
+            <div class="rounded-lg bg-surface p-2.5"><dt class="text-xs text-mutedfg">Valid for</dt><dd class="font-semibold">2 years / multiple trips</dd></div>
+          </dl>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">US Entry — B-1 Business Visa</h3>
+          <p class="mt-1 text-sm text-mutedfg">Required if your country isn't in the Visa Waiver Program.</p>
+          <ul class="mt-3 space-y-1.5 text-sm">
+            <li>· Wait times vary — some consulates run several months.</li>
+            <li>· <strong>Start your application as early as possible.</strong></li>
+            <li>· Need a visa support letter? Reply to your acceptance email to request one.</li>
+          </ul>
+          <p class="mt-3 text-xs text-mutedfg">AIE cannot guarantee visa approvals or extend deadlines for processing delays.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WARDROBE ============ -->
+    <section id="wardrobe" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-coral"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">On camera</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Wardrobe</h2>
+      <p class="mt-2 text-sm text-mutedfg">Keynotes are recorded and become your most-watched moment on YouTube — dress with the camera in mind.</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-5">
+          <h3 class="font-bold text-emerald-700">Do</h3>
+          <ul class="mt-2 space-y-1.5 text-sm text-emerald-900/80">
+            <li>· Wear solid, neutral colors that complement your skin tone</li>
+            <li>· Keep outfits simple, without too many accessories</li>
+            <li>· Choose clothes that are comfortable and authentically you</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-red-200 bg-red-50/60 p-5">
+          <h3 class="font-bold text-red-700">Don't</h3>
+          <ul class="mt-2 space-y-1.5 text-sm text-red-900/80">
+            <li>· Dangly earrings / chunky necklaces — they hit the mic</li>
+            <li>· Small patterns — they look fuzzy on camera</li>
+            <li>· Large patterns or prominent logos — distracting</li>
+            <li>· All black or all white — harsh, fights the lighting</li>
+            <li>· Short skirts — fireside/panel seating can be uncomfortable</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-3">
+        <span class="text-xs font-semibold text-mutedfg">Neutral tones:</span>
+        <div class="flex gap-1.5">
+          <span class="h-6 w-6 rounded-md border border-line bg-[#9CA3AF]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#D6C7B0]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#8A6F52]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#6B7F6E]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#6E7E99]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#7E6E99]"></span>
+          <span class="h-6 w-6 rounded-md border border-line bg-[#F3F3F1]"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ONSITE ============ -->
+    <section id="onsite" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-breakout"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Day of</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Onsite — Comfort &amp; Connectivity</h2>
+
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Speaker Green Room</h3>
+          <p class="mt-1 text-sm text-mutedfg">Next to the Keynote room — see the Event Map. We'll have radio comms to the AV team from here. Be in the green room 30 min before your talk.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Event Platform</h3>
+          <p class="mt-1 text-sm text-mutedfg">Log in with your registration credentials.</p>
+          <a href="https://app.ai.engineer/e/ai-engineer-worlds-fair-2026" class="mt-2 inline-flex text-sm font-semibold text-breakout hover:underline">Open event platform →</a>
+          <p class="mt-2 text-xs text-mutedfg">Native iOS / Android app links land before show week.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Expo &amp; Networking</h3>
+          <p class="mt-1 text-sm text-mutedfg">Stay around after your talk to meet attendees in the expo area and at events. The more you post on X, the more it compounds.</p>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        <!-- wifi -->
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Wi-Fi</h3>
+          <p class="mt-1 text-xs text-mutedfg">Speaker line is for active prep / presenting only — otherwise use the attendee network.</p>
+          <div class="mt-3 space-y-2 text-sm">
+            <div class="rounded-lg bg-surface p-2.5"><p class="text-xs font-bold uppercase tracking-wider text-mutedfg">Speakers</p><p>SSID <span class="float-right font-medium text-ink">AIE Speaker</span></p><p>Pass <span class="float-right font-medium text-ink">BreakALeg</span></p></div>
+            <div class="rounded-lg bg-surface p-2.5"><p class="text-xs font-bold uppercase tracking-wider text-mutedfg">Attendees</p><p>SSID <span class="float-right font-medium text-ink">AI.Engineer Wifi</span></p><p>Pass <span class="float-right font-medium text-ink">TimeToBuild</span></p></div>
+          </div>
+        </div>
+
+        <!-- refreshments -->
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Refreshments</h3>
+          <p class="mt-1 text-sm text-mutedfg">Snacks, coffee, and refreshments are available in the speaker green room throughout the day. There's no speaker-only breakfast or lunch service.</p>
+          <p class="mt-2 text-xs text-mutedfg">Dietary needs from registration are noted — flag the events team if you can't find your option.</p>
+        </div>
+
+        <!-- concessions -->
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Buying food</h3>
+          <p class="mt-1 text-sm text-mutedfg">Paid concessions are available onsite for full meals and coffee — see the Event Map for locations. <span class="italic text-mutedfg">[Concession map TBD]</span></p>
+        </div>
+      </div>
+
+      <!-- receptions -->
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Speaker Dinner</h3>
+          <p class="mt-1 text-sm text-mutedfg">Offsite on <strong class="text-ink">Mon, Jun 29</strong> · <span class="italic">venue TBD</span>. Your first touch point with the team — RSVP through your onboarding form.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">VIP Reception</h3>
+          <p class="mt-1 text-sm text-mutedfg">By Opsy Labs, the same evening, upstairs onsite. Open to leadership &amp; speaker badges — come up after dinner.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Official After Party</h3>
+          <p class="mt-1 text-sm text-mutedfg">Offsite close-out celebration · <span class="italic">date &amp; venue TBD</span>.</p>
+        </div>
+      </div>
+
+      <!-- security -->
+      <div class="mt-4 rounded-xl border border-line bg-white p-5 shadow-sm">
+        <h3 class="font-bold">Security &amp; Safety</h3>
+        <p class="mt-1 text-sm text-mutedfg">Only badged attendees may enter. Anyone roaming without a badge will be asked to put one on or leave. Each attendee gets <strong class="text-ink">one</strong> badge — we cannot reprint. Moscone West, Software 3.0 Inc., our staff and volunteers are <strong class="text-ink">not</strong> responsible for lost or stolen items.</p>
+      </div>
+    </section>
+
+    <!-- ============ CONTACTS ============ -->
+    <section id="contacts" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-keynote"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Who to ask</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Your points of contact</h2>
+      <p class="mt-2 text-sm text-mutedfg">Send it to the right person and you'll get a faster answer.</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Hotels &amp; travel</h3>
+          <p class="mt-1 text-sm text-mutedfg">Camilla — booking, room nights, reimbursements.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Content &amp; scheduling</h3>
+          <p class="mt-1 text-sm text-mutedfg">Swyx — your topic, slot, and abstract.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h3 class="font-bold">Everything else / onsite</h3>
+          <p class="mt-1 text-sm text-mutedfg">Speaker Ops — <a href="mailto:speakers@ai.engineer" class="font-semibold text-breakout hover:underline">speakers@ai.engineer</a>. Start here when in doubt.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MARKETING ============ -->
+    <section id="marketing" class="pt-12">
+      <div class="flex items-center gap-3">
+        <span class="h-5 w-1.5 rounded-full bg-expo"></span>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-mutedfg">Spread the word</p>
+      </div>
+      <h2 class="mt-2 text-2xl font-extrabold tracking-tight">Marketing &amp; Social</h2>
+      <div class="mt-5 rounded-xl border border-line bg-white p-5 shadow-sm md:flex md:items-center md:justify-between md:gap-6">
+        <p class="text-sm text-mutedfg md:max-w-xl">Post on <span class="font-semibold text-ink">X</span> — that's where this community lives and where your talk gains momentum. Tell people what you're presenting and tag <span class="font-semibold text-ink">@aiDotEngineer</span>; we'll announce and amplify you back. The more noise on X, the bigger the room.</p>
+        <div class="mt-4 flex gap-3 md:mt-0">
+          <a href="https://x.com/aiDotEngineer" class="inline-flex items-center rounded-lg border border-line px-4 py-2 text-sm font-semibold hover:border-ink transition-colors">X · @aiDotEngineer</a>
+          <a href="https://www.linkedin.com/company/aidotengineer/" class="inline-flex items-center rounded-lg border border-line px-4 py-2 text-sm font-semibold hover:border-ink transition-colors">LinkedIn</a>
+        </div>
+      </div>
+
+      <!-- token billionaire -->
+      <div class="mt-4 flex items-start gap-3 rounded-xl border border-indigo/30 bg-indigo/5 p-4">
+        <span class="text-xl leading-none">🪙</span>
+        <div class="text-sm">
+          <p class="font-bold text-indigo">Token Billionaire? Apply for the wall.</p>
+          <p class="mt-1 text-mutedfg">If you — or the company you decide for — spend <strong>1B+ tokens a month</strong>, upload proof to claim your spot. <a href="#" class="font-semibold text-breakout hover:underline">Apply here →</a> <span class="italic">[link TBD]</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RECORDING NOTE ============ -->
+    <section class="pt-8">
+      <div class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <span class="text-xl leading-none">🎥</span>
+        <p class="text-sm text-amber-900/85">All sessions are recorded. Publishing happens on a rolling, session-by-session cadence post-show. Want a copy of your session? Use the footage request form at <a href="https://www.ai.engineer/request/footage" class="font-semibold text-amber-800 hover:underline">ai.engineer/request/footage</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-14 border-t border-line bg-white">
+    <div class="mx-auto flex max-w-5xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-sm font-black uppercase tracking-[0.12em] text-ink">AI Engineer World's Fair</span>
+        <span class="text-sm text-mutedfg">Moscone West · June 29 – July 2, 2026</span>
+      </div>
+      <span class="inline-flex w-fit items-center rounded-full border border-keynote/20 bg-keynote/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-keynote">v1</span>
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        <a href="../speakers/" class="font-semibold hover:underline">Speaker Onsite Guide</a>
+        <a href="https://ai.engineer/worldsfair" class="font-semibold hover:underline">ai.engineer/worldsfair</a>
+        <a href="mailto:speakers@ai.engineer" class="font-bold">Questions? speakers@ai.engineer</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
