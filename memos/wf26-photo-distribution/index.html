@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF26 Photo Distribution — Decision Brief</title>
+<style>
+  :root {
+    --background: #ffffff;
+    --foreground: #0a0a0b;
+    --muted: #f4f4f5;
+    --muted-foreground: #6b6b70;
+    --card: #ffffff;
+    --border: #e4e4e7;
+    --accent: #4f46e5;
+    --accent-foreground: #ffffff;
+    --accent-soft: #eef0fd;
+    --good: #059669;
+    --good-soft: #ecfdf5;
+    --good-border: #a7f3d0;
+    --mark: #dc2626;
+    --mark-soft: rgba(220,38,38,0.08);
+    --ring: #4f46e5;
+    --radius: 0.75rem;
+    --shadow-sm: 0 1px 2px rgba(10,10,11,0.04);
+    --shadow: 0 1px 3px rgba(10,10,11,0.06), 0 4px 16px rgba(10,10,11,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0b;
+      --foreground: #f4f4f5;
+      --muted: #18181b;
+      --muted-foreground: #9a9aa1;
+      --card: #131316;
+      --border: #27272a;
+      --accent: #8b85f0;
+      --accent-foreground: #0a0a0b;
+      --accent-soft: #1c1a2e;
+      --good: #34d399;
+      --good-soft: #0f2119;
+      --good-border: #14532d;
+      --mark: #f87171;
+      --mark-soft: rgba(248,113,113,0.12);
+      --ring: #8b85f0;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --background: #0a0a0b;
+    --foreground: #f4f4f5;
+    --muted: #18181b;
+    --muted-foreground: #9a9aa1;
+    --card: #131316;
+    --border: #27272a;
+    --accent: #8b85f0;
+    --accent-foreground: #0a0a0b;
+    --accent-soft: #1c1a2e;
+    --good: #34d399;
+    --good-soft: #0f2119;
+    --good-border: #14532d;
+    --mark: #f87171;
+    --mark-soft: rgba(248,113,113,0.12);
+    --ring: #8b85f0;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"] {
+    --background: #ffffff;
+    --foreground: #0a0a0b;
+    --muted: #f4f4f5;
+    --muted-foreground: #6b6b70;
+    --card: #ffffff;
+    --border: #e4e4e7;
+    --accent: #4f46e5;
+    --accent-foreground: #ffffff;
+    --accent-soft: #eef0fd;
+    --good: #059669;
+    --good-soft: #ecfdf5;
+    --good-border: #a7f3d0;
+    --mark: #dc2626;
+    --mark-soft: rgba(220,38,38,0.08);
+    --ring: #4f46e5;
+    --shadow-sm: 0 1px 2px rgba(10,10,11,0.04);
+    --shadow: 0 1px 3px rgba(10,10,11,0.06), 0 4px 16px rgba(10,10,11,0.05);
+  }
+
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: -apple-system, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+
+  .mono {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Top bar */
+  .topbar {
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+  }
+  .topbar-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .brand .mark {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-foreground);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+    font-family: ui-monospace, monospace;
+  }
+  .crumb { color: var(--muted-foreground); font-size: 13px; }
+  .crumb span { color: var(--foreground); }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--muted);
+    color: var(--foreground);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .theme-toggle svg { width: 16px; height: 16px; }
+  .theme-toggle .i-moon { display: none; }
+  :root[data-theme="dark"] .theme-toggle .i-sun { display: none; }
+  :root[data-theme="dark"] .theme-toggle .i-moon { display: block; }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  /* Filmstrip — a callback to the contact-sheet feel, kept quiet */
+  .filmstrip {
+    height: 14px;
+    background-image: radial-gradient(circle, var(--border) 1.8px, transparent 2px);
+    background-size: 22px 14px;
+    background-position: 11px center;
+  }
+
+  .circled {
+    position: relative;
+    display: inline-block;
+  }
+  .circled::after {
+    content: "";
+    position: absolute;
+    left: -7px; right: -9px; top: -5px; bottom: -6px;
+    border: 1.6px solid var(--mark);
+    border-radius: 52% 48% 55% 45% / 48% 52% 48% 52%;
+    transform: rotate(-2deg);
+    pointer-events: none;
+  }
+
+  /* Hero */
+  header.hero { padding: 56px 0 40px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--muted);
+    color: var(--muted-foreground);
+  }
+  .badge.accent {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: transparent;
+  }
+  .badge.good {
+    background: var(--good-soft);
+    color: var(--good);
+    border-color: var(--good-border);
+  }
+  h1 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: clamp(30px, 4.4vw, 42px);
+    line-height: 1.15;
+    margin: 16px 0 14px;
+    text-wrap: balance;
+  }
+  .dek {
+    color: var(--muted-foreground);
+    font-size: 17px;
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  /* Stat row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .stat {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat .n { font-size: 22px; font-weight: 700; }
+  .stat .k { color: var(--muted-foreground); font-size: 12.5px; margin-top: 2px; }
+
+  section { padding: 44px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-head { margin-bottom: 20px; }
+  .eyebrow-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .section-num {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--mark);
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h2 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    font-size: 21px;
+    margin: 0 0 6px;
+  }
+  .section-intro {
+    color: var(--muted-foreground);
+    max-width: 64ch;
+    margin: 0;
+    font-size: 14.5px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-pad { padding: 20px 22px; }
+
+  /* Two-track plan */
+  .plan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .track {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .track-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .track h3 { font-size: 15.5px; font-weight: 650; margin: 0; }
+  .track p { margin: 0; color: var(--muted-foreground); font-size: 14px; }
+  .track .cost {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-family: ui-monospace, monospace;
+    font-size: 13.5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .track .cost b { font-weight: 600; }
+
+  /* Option cards */
+  .subgroup-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin: 30px 0 12px;
+  }
+  .subgroup-label:first-child { margin-top: 0; }
+
+  .frames {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+  }
+  .frame.picked { border-color: var(--good-border); background: var(--good-soft); }
+  .frame .fno {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--muted-foreground);
+    margin-bottom: 8px;
+  }
+  .frame-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .frame h4 { font-size: 14.5px; font-weight: 650; margin: 0; }
+  .frame p { margin: 0 0 12px; font-size: 13.5px; color: var(--muted-foreground); line-height: 1.5; flex: 1; }
+  .frame .price {
+    font-family: ui-monospace, monospace;
+    font-size: 12.5px;
+    color: var(--foreground);
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .frame.picked .price { border-top-color: var(--good-border); }
+
+  /* Table */
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; font-size: 14px; }
+  thead th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--foreground); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody th {
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    color: var(--muted-foreground);
+  }
+  td .fig { font-family: ui-monospace, monospace; color: var(--foreground); }
+  .col-winner { position: relative; }
+  thead th.col-winner { color: var(--good); }
+
+  /* Verdict */
+  .verdict {
+    margin-top: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    background: var(--good-soft);
+    border: 1px solid var(--good-border);
+    border-radius: var(--radius);
+  }
+  .verdict .badge.good { flex-shrink: 0; margin-top: 2px; }
+  .verdict p { margin: 0; color: var(--foreground); font-size: 14.5px; }
+  .verdict strong { font-weight: 650; }
+
+  .fineprint {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--muted-foreground);
+  }
+
+  footer { padding: 36px 0 56px; }
+  .sources {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+    font-size: 12.5px;
+    color: var(--muted-foreground);
+  }
+  .sources a { color: var(--muted-foreground); }
+  .sources a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr; }
+    .plan-grid { grid-template-columns: 1fr; }
+    .sources { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="mark">WF</span> AIE World's Fair</div>
+    <div class="topbar-right">
+      <div class="crumb">Photos <span>/</span> Decision brief</div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="filmstrip"></div>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="badge accent">Decision needed this week</span>
+    <h1>9,394 photos. Two audiences. One plan.</h1>
+    <p class="dek">The AV team just delivered the full WF26 select to Drive. A raw folder link won't work for speakers hunting stage candids or sponsors hunting booth shots — here's the shortlist we're weighing to get everyone their photos fast.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="n mono">9,394</div>
+        <div class="k">photos delivered</div>
+      </div>
+      <div class="stat">
+        <div class="n mono">139GB</div>
+        <div class="k">measured, full selects</div>
+      </div>
+      <div class="stat">
+        <div class="n mono">2</div>
+        <div class="k">audiences to serve</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="plan">
+    <div class="section-head">
+      <div class="eyebrow-row"><span class="section-num">01</span><span class="eyebrow">The plan</span></div>
+      <h2>Two tracks, not one link</h2>
+      <p class="section-intro">Split distribution by what each audience is actually looking for, instead of forwarding one giant folder.</p>
+    </div>
+
+    <div class="plan-grid">
+      <div class="track">
+        <div class="track-head">
+          <h3>Speakers, attendees, the public</h3>
+          <span class="badge good">Track A</span>
+        </div>
+        <p>Selfie-match against the full 9,394 photo set. No app, no scrolling — a personal gallery in seconds, easy to post straight to LinkedIn or X.</p>
+        <div class="cost"><span>Fotify Premium Event</span> <b>$49 / event</b></div>
+      </div>
+      <div class="track">
+        <div class="track-head">
+          <h3>Sponsors &amp; exhibitors</h3>
+          <span class="badge good">Track B</span>
+        </div>
+        <p>Face-matching won't surface booth or swag shots. A coordinator pulls the best 300–400 "atmosphere & booth" frames into a branded, PIN-lockable gallery.</p>
+        <div class="cost"><span>Pixieset Advanced</span> <b>$30–40 / mo</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="options">
+    <div class="section-head">
+      <div class="eyebrow-row"><span class="section-num">02</span><span class="eyebrow">Options considered</span></div>
+      <h2>What else is out there</h2>
+      <p class="section-intro">Three tiers, from selfie-matching apps built for exactly this, up to enterprise asset management we almost certainly don't need for one event.</p>
+    </div>
+
+    <div class="subgroup-label">Tier 1 — AI facial recognition, for people-finding</div>
+    <div class="frames">
+      <div class="frame picked">
+        <div class="fno">01</div>
+        <div class="frame-head"><h4 class="circled">Fotify</h4><span class="badge good">Picked</span></div>
+        <p>Browser-only, no app for guests. AI moderation, custom branding.</p>
+        <div class="price">$49 / event · 365-day hosting</div>
+      </div>
+      <div class="frame">
+        <div class="fno">02</div>
+        <div class="frame-head"><h4>Waldo Photos</h4></div>
+        <p>Recognized name, SMS + app delivery. Needs a custom quote past ~3,000 photos.</p>
+        <div class="price">~$300–500+ at our volume</div>
+      </div>
+      <div class="frame">
+        <div class="fno">03</div>
+        <div class="frame-head"><h4>AccioPix</h4></div>
+        <p>Pure WhatsApp bot — text a selfie, get your photos back in-chat.</p>
+        <div class="price">~$19–20 for 9,400 photos</div>
+      </div>
+      <div class="frame">
+        <div class="fno">04</div>
+        <div class="frame-head"><h4>Honcho / SnapSeek</h4></div>
+        <p>Newer web-based selfie matching, no app required. Free tier to pilot first.</p>
+        <div class="price">Free tier → paid unlock</div>
+      </div>
+    </div>
+
+    <div class="subgroup-label">Tier 2 — client galleries, for sponsor curation</div>
+    <div class="frames">
+      <div class="frame">
+        <div class="fno">05</div>
+        <div class="frame-head"><h4>Pixieset / SmugMug / Pic-Time</h4></div>
+        <p>Traditional gallery hosts — folders, tags, PIN-protected downloads. Full comparison below.</p>
+        <div class="price">$15–50 / mo</div>
+      </div>
+    </div>
+
+    <div class="subgroup-label">Tier 3 — enterprise DAM, probably overkill</div>
+    <div class="frames">
+      <div class="frame">
+        <div class="fno">06</div>
+        <div class="frame-head"><h4>PhotoShelter for Brands</h4></div>
+        <p>AI auto-tags logos, text, and brand assets across every photo — built for running this year-round, not one event.</p>
+        <div class="price">$3,000+ / yr</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sponsor-gallery">
+    <div class="section-head">
+      <div class="eyebrow-row"><span class="section-num">03</span><span class="eyebrow">Track B, in detail</span></div>
+      <h2>Sponsor gallery, head-to-head</h2>
+      <p class="section-intro">Fotify covers Track A. For Track B, the real choice is Pixieset vs. Pic-Time vs. SmugMug — it comes down to folder organization, storage headroom, and how premium the sponsor's link feels.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-winner"><span class="circled">Pixieset</span></th>
+            <th>Pic-Time</th>
+            <th>SmugMug</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Vibe</th>
+            <td>Modern, clean — the "Apple" of client galleries</td>
+            <td>Editorial, premium, dynamic</td>
+            <td>Utility, traditional — a polished Dropbox</td>
+          </tr>
+          <tr>
+            <th>Folder depth</th>
+            <td><span class="fig">1 level</span> — Collections → Sets</td>
+            <td><span class="fig">1 level</span> — Gallery → Scenes</td>
+            <td><span class="fig">Nested</span> — unlimited sub-folders</td>
+          </tr>
+          <tr>
+            <th>Cost at our ~140GB</th>
+            <td><span class="fig">$30–40/mo</span> Advanced (1TB) — Pro's 100GB cap is too tight for us</td>
+            <td><span class="fig">$50/mo</span> Advanced (unlimited) — Professional's 100GB falls short too</td>
+            <td><span class="fig">$15–20/mo</span> Power, unlimited storage</td>
+          </tr>
+          <tr>
+            <th>Download control</th>
+            <td>Granular — PIN sets, client-only access</td>
+            <td>Excellent — scene-level sharing rules</td>
+            <td>Good — standard privacy controls</td>
+          </tr>
+          <tr>
+            <th>Setup speed</th>
+            <td>Minutes, very intuitive</td>
+            <td>Moderate — more settings to configure</td>
+            <td>Slower — older UI, more hierarchy to build</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="verdict">
+      <span class="badge good">Recommended</span>
+      <p><strong>Pixieset wins for sponsors.</strong> Presentation is everything here — it makes WF26 look high-end with almost no design effort, and it's intuitive enough that our AV team can upload and organize galleries in minutes without anyone asking for help finding the download button.</p>
+    </div>
+    <p class="fineprint">Between the 139GB full select and everything else we'll want to keep in the gallery long-term, 100GB doesn't leave headroom — budget for Pixieset's $30–40/mo Advanced tier, not the $20/mo Pro plan. Pricing checked July 10, 2026 — Pixieset's live pricing page may list different current tiers than shown above, so confirm before purchasing.</p>
+  </section>
+
+  <footer>
+    <div class="subgroup-label" style="margin-top:0;">Sources</div>
+    <div class="sources">
+      <a href="https://dreamcast.co/blog/picbot/traditional-vs-ai-event-photo-sharing-methods/">Traditional vs AI event photo sharing methods</a>
+      <a href="https://fotify.app/blog/best-event-photo-sharing-apps-2026/">Best event photo sharing apps 2026</a>
+      <a href="https://thehoncho.app/blog/best-face-recognition-photo-sharing-apps/">Best face recognition photo sharing apps</a>
+      <a href="https://fotify.app/blog/fotify-vs-waldo-photos-comparison/">Fotify vs Waldo Photos comparison</a>
+      <a href="https://waldo.photos/auth/register?event_purchase=1">Waldo event purchase page</a>
+      <a href="https://acciopix.com/blog/best-ai-photo-sharing-apps-2026">Best AI photo sharing apps 2026</a>
+      <a href="https://go.photoshelter.com/brands/role/brand-communications/">PhotoShelter for Brands</a>
+      <a href="https://pixieset.com/pricing/">Pixieset pricing</a>
+      <a href="https://www.smugmug.com/plans">SmugMug plans</a>
+      <a href="https://www.pic-time.com/pricing/client-delivery-suite">Pic-Time pricing</a>
+      <a href="https://findme.photo/blog/smugmug-vs-pixieset-vs-format-2026">SmugMug vs Pixieset vs Format 2026</a>
+      <a href="https://picflow.com/compare/pic-time-vs-pixieset">Pic-Time vs Pixieset comparison</a>
+    </div>
+  </footer>
+</div>
+<div class="filmstrip"></div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = null;
+    try { stored = localStorage.getItem('wf26-theme'); } catch (e) {}
+    var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', stored || system);
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('wf26-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
