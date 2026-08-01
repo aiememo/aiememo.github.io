@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swyx Inc — Rack Room Walkthrough</title>
+<style>
+  :root {
+    color-scheme: light;
+    --plane: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --hairline: rgba(11,11,11,0.10);
+    --accent: #2a78d6;
+
+    --c-audio:   #2a78d6;
+    --c-vidproc: #eb6834;
+    --c-control: #1baf7a;
+    --c-conf:    #eda100;
+    --c-source:  #e87ba4;
+    --c-net:     #008300;
+    --c-sec:     #4a3aa7;
+    --c-power:   #e34948;
+
+    --seq-250: #86b6ef;
+    --seq-300: #6da7ec;
+    --seq-400: #3987e5;
+    --seq-500: #256abf;
+    --seq-600: #184f95;
+
+    --tape: #bcd6ee;
+    --flash: rgba(42,120,214,0.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --plane: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --hairline: rgba(255,255,255,0.10);
+      --accent: #3987e5;
+      --c-audio:   #3987e5;
+      --c-vidproc: #d95926;
+      --c-control: #199e70;
+      --c-conf:    #c98500;
+      --c-source:  #d55181;
+      --c-net:     #008300;
+      --c-sec:     #9085e9;
+      --c-power:   #e66767;
+      --tape: #33517a;
+      --flash: rgba(57,135,229,0.22);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --plane: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --hairline: rgba(255,255,255,0.10);
+    --accent: #3987e5;
+    --c-audio:   #3987e5;
+    --c-vidproc: #d95926;
+    --c-control: #199e70;
+    --c-conf:    #c98500;
+    --c-source:  #d55181;
+    --c-net:     #008300;
+    --c-sec:     #9085e9;
+    --c-power:   #e66767;
+    --tape: #33517a;
+    --flash: rgba(57,135,229,0.22);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --plane: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --hairline: rgba(11,11,11,0.10);
+    --accent: #2a78d6;
+    --c-audio:   #2a78d6;
+    --c-vidproc: #eb6834;
+    --c-control: #1baf7a;
+    --c-conf:    #eda100;
+    --c-source:  #e87ba4;
+    --c-net:     #008300;
+    --c-sec:     #4a3aa7;
+    --c-power:   #e34948;
+    --tape: #bcd6ee;
+    --flash: rgba(42,120,214,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1, h2, h3 { font-family: "Bahnschrift", "Arial Narrow", system-ui, sans-serif; text-wrap: balance; }
+  h2 {
+    font-size: 22px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+  .sec { margin-top: 56px; }
+  .sec > .sub { color: var(--ink-2); margin: 0 0 20px; max-width: 68ch; }
+
+  code, .mono { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; }
+
+  /* ---------- header ---------- */
+  header.hero { padding: 48px 0 8px; border-bottom: 1px solid var(--grid); }
+  .eyebrow {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 10px;
+  }
+  header.hero h1 {
+    font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: .015em;
+    text-transform: uppercase; margin: 0 0 8px; line-height: 1.08;
+  }
+  header.hero .lede { color: var(--ink-2); max-width: 72ch; margin: 0 0 28px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; padding-bottom: 28px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 12px 18px; min-width: 128px;
+  }
+  .stat .n {
+    font-family: "Bahnschrift", "Arial Narrow", system-ui, sans-serif;
+    font-size: 26px; font-weight: 700; line-height: 1.1;
+  }
+  .stat .l { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+
+  /* ---------- legend ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 20px 0 24px; }
+  .legend .key { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); }
+  .dot { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+
+  /* ---------- rack board ---------- */
+  .rail { overflow-x: auto; padding-bottom: 8px; }
+  .board {
+    display: grid; grid-template-columns: repeat(5, minmax(215px, 1fr));
+    gap: 14px; min-width: 1120px; align-items: start;
+  }
+  .rack {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
+    overflow: hidden;
+  }
+  .rack > header {
+    display: flex; gap: 10px; align-items: baseline;
+    padding: 12px 12px 10px; border-bottom: 2px solid var(--ink);
+  }
+  .rackno {
+    font-family: "Bahnschrift", "Arial Narrow", system-ui, sans-serif;
+    font-size: 24px; font-weight: 700; line-height: 1;
+  }
+  .rack > header h3 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+  .rack > header p { margin: 2px 0 0; font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+  .topcable {
+    font-size: 11px; color: var(--ink-2); background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+    border-bottom: 1px dashed var(--hairline); padding: 6px 12px; line-height: 1.4;
+  }
+  .units { display: flex; flex-direction: column; }
+  .unit {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    font: inherit; color: inherit; background: var(--surface);
+    border: 0; border-bottom: 1px solid var(--grid);
+    border-left: 4px solid var(--uc, var(--muted));
+    padding: 8px 10px 8px 10px; position: relative;
+  }
+  .unit:hover { background: color-mix(in srgb, var(--uc, var(--muted)) 8%, var(--surface)); }
+  .unit:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .unit .u-name { display: block; font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .unit .u-sub { display: block; font-size: 11.5px; color: var(--ink-2); line-height: 1.35; margin-top: 1px; }
+  .unit .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .tag {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 10px; letter-spacing: .04em;
+    background: #ffffff; color: #0b0b0b; border: 1px solid rgba(11,11,11,.25);
+    border-radius: 2px; padding: 1px 5px; box-shadow: 0 1px 1px rgba(0,0,0,.12);
+  }
+  .tag.tape { background: var(--tape); color: var(--ink); border-color: transparent; }
+  .count {
+    position: absolute; top: 8px; right: 8px;
+    font-family: "Bahnschrift", "Arial Narrow", system-ui, sans-serif;
+    font-size: 12px; font-weight: 700; color: var(--ink-2);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 1px 7px;
+  }
+  .blank {
+    border-bottom: 1px dashed var(--grid); border-left: 4px solid transparent;
+    padding: 5px 10px; font-size: 10.5px; color: var(--muted);
+    letter-spacing: .08em; text-transform: uppercase; text-align: center;
+  }
+  .cat-audio   { --uc: var(--c-audio); }
+  .cat-vidproc { --uc: var(--c-vidproc); }
+  .cat-control { --uc: var(--c-control); }
+  .cat-conf    { --uc: var(--c-conf); }
+  .cat-source  { --uc: var(--c-source); }
+  .cat-net     { --uc: var(--c-net); }
+  .cat-sec     { --uc: var(--c-sec); }
+  .cat-power   { --uc: var(--c-power); }
+  .cat-none    { --uc: var(--grid); }
+
+  /* ---------- timeline ---------- */
+  .tl { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 18px 18px 12px; }
+  .tl-bar { display: flex; height: 34px; border-radius: 4px; overflow: hidden; gap: 2px; background: var(--plane); }
+  .tl-seg { border: 0; padding: 0; cursor: pointer; position: relative; min-width: 8px; }
+  .tl-seg:hover { filter: brightness(1.12); }
+  .tl-seg:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .tl-labels { display: flex; gap: 2px; margin-top: 6px; }
+  .tl-labels span {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 10.5px; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .tl-scale { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 6px; border-top: 1px solid var(--grid); }
+  .tl-scale span { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 10.5px; color: var(--muted); }
+
+  /* ---------- inventory table ---------- */
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 13px; }
+  thead th {
+    text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 2px solid var(--ink);
+    white-space: nowrap;
+  }
+  tbody td { padding: 7px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .catcell { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; color: var(--ink-2); }
+  td .mono { font-size: 12px; }
+
+  /* ---------- open questions ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+  .card p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .card .q {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 10.5px; letter-spacing: .1em; color: var(--accent); text-transform: uppercase;
+    display: block; margin-bottom: 6px;
+  }
+
+  /* ---------- transcript ---------- */
+  .tsearch {
+    width: 100%; max-width: 420px; font: inherit; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 8px 12px; margin-bottom: 18px;
+  }
+  .tsearch:focus-visible { outline: 2px solid var(--accent); }
+  .transcript { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 8px 0; }
+  .tsec {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 14px 18px 6px; margin-top: 8px;
+  }
+  .tsec:first-child { margin-top: 0; }
+  .tsec .swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; align-self: center; }
+  .tsec h3 {
+    margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .tsec .range { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+  .cue { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 5px 18px; margin: 0; }
+  .cue .ts {
+    font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+    font-size: 11.5px; color: var(--muted); padding-top: 3px; font-variant-numeric: tabular-nums;
+  }
+  .cue .tx { max-width: 72ch; color: var(--ink-2); }
+  .cue mark { background: color-mix(in srgb, var(--c-conf) 35%, var(--surface)); color: var(--ink); border-radius: 2px; }
+  .cue.flash { background: var(--flash); border-radius: 4px; }
+  .cue.flash .tx { color: var(--ink); }
+  .nores { padding: 10px 18px; color: var(--muted); font-size: 13px; display: none; }
+
+  footer.colophon {
+    margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--grid);
+    font-size: 12px; color: var(--muted);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Field survey &middot; 2026-07-03 &middot; 22:08 &middot; runtime 22:54</p>
+    <h1>Swyx Inc &mdash; Five-Rack AV&thinsp;/&thinsp;Network &amp; Security Room</h1>
+    <p class="lede">
+      A visual reconstruction of the video walkthrough transcript. The narrator walked the racks
+      right-to-left (Rack&nbsp;5 &rarr; Rack&nbsp;1), reading every faceplate, model number, and white
+      sticker label out loud. Racks 3&ndash;5 are the AVI&nbsp;SPL-installed AV system; Racks 1&ndash;2
+      are Chatsworth (CPI) structured-cabling and security racks, with the UniFi network core in
+      Rack&nbsp;1. Click any device to jump to the moment it&rsquo;s described in the transcript.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="n">5</div><div class="l">Racks surveyed</div></div>
+      <div class="stat"><div class="n">60+</div><div class="l">Devices cataloged</div></div>
+      <div class="stat"><div class="n">22:54</div><div class="l">Walkthrough runtime</div></div>
+      <div class="stat"><div class="n">100&ndash;200</div><div class="l">Cat6 runs exiting R1&ndash;R2</div></div>
+      <div class="stat"><div class="n">24</div><div class="l">Fiber strands, floor 1&harr;2</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">Open questions</div></div>
+    </div>
+  </header>
+
+  <!-- ============ RACK ELEVATIONS ============ -->
+  <section class="sec" aria-labelledby="h-racks">
+    <h2 id="h-racks">Rack elevations</h2>
+    <p class="sub">
+      Racks shown in physical order, left to right, as they stand in the room. Unit order within each
+      rack follows the narration top-to-bottom. White chips are the white sticker labels read on
+      camera; blue chips are painter&rsquo;s-tape labels. Click a device to jump to its transcript moment.
+    </p>
+    <div class="legend" role="list">
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-vidproc)"></span>Video processing / switching</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-control)"></span>Control</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-conf)"></span>Conferencing</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-source)"></span>Media sources</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-net)"></span>Network &amp; cabling</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-sec)"></span>Security / surveillance</span>
+      <span class="key" role="listitem"><span class="dot" style="background:var(--c-power)"></span>Power</span>
+    </div>
+
+    <div class="rail">
+      <div class="board">
+
+        <!-- RACK 1 -->
+        <article class="rack">
+          <header>
+            <span class="rackno">R1</span>
+            <div>
+              <h3>Network core</h3>
+              <p>&ldquo;The heart of the system&rdquo; &middot; mostly cabling</p>
+            </div>
+          </header>
+          <div class="topcable">&uarr; Part of the white Cat6 bundle (&asymp;100&ndash;200 cables) exits the top of R1&ndash;R2 and routes through the building</div>
+          <div class="units">
+            <button class="unit cat-net" data-target="t-unifi">
+              <span class="u-name">UniFi Dream Machine Pro</span>
+              <span class="u-sub">Router / gateway &mdash; narrator: router, maybe not the modem</span>
+            </button>
+            <button class="unit cat-net" data-target="t-unifi">
+              <span class="u-name">UniFi USW switch</span>
+              <span class="u-sub">Core network switch</span>
+            </button>
+            <button class="unit cat-net" data-target="t-data1">
+              <span class="u-name">CommScope patch fields &times;4</span>
+              <span class="u-sub">Short patch jumpers, front-of-rack</span>
+              <span class="tags"><span class="tag">DATA 1A</span><span class="tag">DATA 1B</span><span class="tag">DATA 1C</span><span class="tag">DATA 1D</span></span>
+              <span class="count">&times;4</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-swhouse">
+              <span class="u-name">Software House power unit</span>
+              <span class="u-sub">Access-control power (220&nbsp;V-class input) &mdash; deferred to a separate video</span>
+            </button>
+            <div class="blank">remainder: cabling only</div>
+          </div>
+        </article>
+
+        <!-- RACK 2 -->
+        <article class="rack">
+          <header>
+            <span class="rackno">R2</span>
+            <div>
+              <h3>Structured cabling + security</h3>
+              <p>CPI Chatsworth Products &middot; different branding than R3&ndash;R5</p>
+            </div>
+          </header>
+          <div class="topcable">&uarr; Part of the white Cat6 bundle (&asymp;100&ndash;200 cables) exits the top of R1&ndash;R2 and routes through the building</div>
+          <div class="units">
+            <button class="unit cat-net" data-target="t-patch2">
+              <span class="u-name">CommScope Uniprise Cat6 patch fields</span>
+              <span class="u-sub">Top three bays &mdash; open patch terminations</span>
+              <span class="tags"><span class="tag">1-AB-B</span><span class="tag">1-AB-C</span></span>
+            </button>
+            <button class="unit cat-net" data-target="t-cisco">
+              <span class="u-name">Cisco switch</span>
+              <span class="u-sub">&asymp;bay 35 &mdash; dedicated to the AV system</span>
+              <span class="tags"><span class="tag tape">AV SWITCH</span></span>
+            </button>
+            <button class="unit cat-net" data-target="t-corning">
+              <span class="u-name">Corning LANscape cross-connect</span>
+              <span class="u-sub">24-strand fiber optic, first floor &harr; second floor</span>
+            </button>
+            <button class="unit cat-net" data-target="t-patch2b">
+              <span class="u-name">CommScope Uniprise Cat6 patch field</span>
+              <span class="u-sub">Additional copper patch bay</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-avigilonkvm">
+              <span class="u-name">Avigilon KVM console</span>
+              <span class="u-sub">Motorola Solutions &mdash; drives the desktop PC below</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-avigilondrives">
+              <span class="u-name">Avigilon recorder / drive array</span>
+              <span class="u-sub">&ldquo;Looks like a bunch of drives&rdquo; &mdash; model on rear, unread</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-openeye">
+              <span class="u-name">OpenEye recorder (HDD unit)</span>
+              <span class="u-sub">Stores CCTV security-camera footage</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-unknowncam">
+              <span class="u-name">Unidentified unit &mdash; &ldquo;cameras only&rdquo;</span>
+              <span class="u-sub">No make/model found; distinctive faceplate, ID from photos later</span>
+            </button>
+            <button class="unit cat-net" data-target="t-unknowncam">
+              <span class="u-name">Basic network switch</span>
+              <span class="u-sub">&ldquo;Just a regular basic switch&rdquo; (rear of rack)</span>
+            </button>
+            <button class="unit cat-sec" data-target="t-avigilonkvm">
+              <span class="u-name">Desktop PC</span>
+              <span class="u-sub">Bottom of rack &mdash; security workstation, fed by the Avigilon KVM</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- RACK 3 -->
+        <article class="rack">
+          <header>
+            <span class="rackno">R3</span>
+            <div>
+              <h3>Conferencing + sources</h3>
+              <p>AVI SPL &middot; codecs, streaming, playback, cable TV</p>
+            </div>
+          </header>
+          <div class="units">
+            <button class="unit cat-none" data-target="t-avispl">
+              <span class="u-name">AVI SPL faceplate</span>
+              <span class="u-sub">&ldquo;Engineered &amp; installed by AVI SPL &mdash; locations nationwide&rdquo;</span>
+            </button>
+            <button class="unit cat-conf" data-target="t-polycom">
+              <span class="u-name">Polycom RealPresence Group 500 &times;5</span>
+              <span class="u-sub">One codec per room; rack-side room labels + device stickers RPG1-2&hellip;RPG1-5</span>
+              <span class="tags">
+                <span class="tag tape">PLENARY? RM 009</span>
+                <span class="tag">REVEAL 1 · RM 025-1</span>
+                <span class="tag">REVEAL 2 · RM 025-2</span>
+                <span class="tag tape">BAY 2 · RM 004</span>
+                <span class="tag tape">BAY 1 · RM 002</span>
+              </span>
+              <span class="count">&times;5</span>
+            </button>
+            <div class="blank">skipped bay</div>
+            <button class="unit cat-control" data-target="t-cenci3">
+              <span class="u-name">Crestron CEN-CI3-3</span>
+              <span class="u-sub">3-Series card interface &mdash; LEDs: power, message, reset, slots 1&ndash;3</span>
+            </button>
+            <button class="unit cat-source" data-target="t-smp">
+              <span class="u-name">Extron SMP 300-series</span>
+              <span class="u-sub">Streaming media processor &mdash; play / record / pause / mark / layout / preset / swap</span>
+            </button>
+            <button class="unit cat-source" data-target="t-abekas">
+              <span class="u-name">Abekas Mira</span>
+              <span class="u-sub">Production/replay server &mdash; LEDs: reference, disc, activity, fans; Polycom remote resting here</span>
+            </button>
+            <button class="unit cat-source" data-target="t-appletv">
+              <span class="u-name">Apple TV &times;5</span>
+              <span class="u-sub">Top bay partially collapsed &mdash; three units hard to reach</span>
+              <span class="tags"><span class="tag">TV1-1</span><span class="tag">TV1-2</span><span class="tag">TV1-3</span><span class="tag">TV1-4</span><span class="tag">TV1-5</span></span>
+              <span class="count">&times;5</span>
+            </button>
+            <button class="unit cat-source" data-target="t-samsung">
+              <span class="u-name">Samsung BD-J7500</span>
+              <span class="u-sub">Blu-ray player &mdash; model read off the rear panel</span>
+            </button>
+            <button class="unit cat-source" data-target="t-cable">
+              <span class="u-name">Xfinity box &mdash; RNG150N</span>
+              <span class="u-sub">Cable TV tuner, remote attached</span>
+              <span class="tags"><span class="tag">CTV1-1</span></span>
+            </button>
+            <button class="unit cat-source" data-target="t-cable">
+              <span class="u-name">Comcast box</span>
+              <span class="u-sub">Cable TV tuner</span>
+              <span class="tags"><span class="tag">CTV1-2</span></span>
+            </button>
+            <button class="unit cat-source" data-target="t-cable">
+              <span class="u-name">Motorola Xfinity box</span>
+              <span class="u-sub">Cable TV tuner</span>
+              <span class="tags"><span class="tag">CTV1-3</span></span>
+            </button>
+            <button class="unit cat-source" data-target="t-cable">
+              <span class="u-name">Xfinity box &mdash; RNG110</span>
+              <span class="u-sub">Second Xfinity model; four cable tuners total in this rack</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- RACK 4 -->
+        <article class="rack">
+          <header>
+            <span class="rackno">R4</span>
+            <div>
+              <h3>Control + video wall</h3>
+              <p>AVI SPL &middot; Crestron control, matrix routing</p>
+            </div>
+          </header>
+          <div class="units">
+            <button class="unit cat-none" data-target="t-cp3n">
+              <span class="u-name">AVI SPL faceplate</span>
+              <span class="u-sub">Installer branding at top of rack</span>
+            </button>
+            <button class="unit cat-control" data-target="t-cp3n">
+              <span class="u-name">Crestron CP3N</span>
+              <span class="u-sub">3-Series advanced control processor</span>
+            </button>
+            <button class="unit cat-control" data-target="t-pro3">
+              <span class="u-name">Crestron PRO3</span>
+              <span class="u-sub">Advanced control processor</span>
+              <span class="tags"><span class="tag">CNT-01</span></span>
+            </button>
+            <button class="unit cat-vidproc" data-target="t-dge2">
+              <span class="u-name">Crestron DGE-2</span>
+              <span class="u-sub">Digital graphics engine</span>
+            </button>
+            <div class="blank">&asymp;3U blank</div>
+            <button class="unit cat-vidproc" data-target="t-dge2mon">
+              <span class="u-name">DGE-2 console monitor</span>
+              <span class="u-sub">On-screen: &ldquo;Starting, please wait&rdquo; &mdash; possibly stuck at boot</span>
+            </button>
+            <button class="unit cat-vidproc" data-target="t-tvone">
+              <span class="u-name">tvONE CORIOmaster</span>
+              <span class="u-sub">Video-wall processor &mdash; believed to drive the 12-panel LED wall</span>
+              <span class="tags"><span class="tag">VWP1-1</span></span>
+            </button>
+            <div class="blank">skipped bay</div>
+            <button class="unit cat-vidproc" data-target="t-purelink">
+              <span class="u-name">PureLink PM48X</span>
+              <span class="u-sub">48&times;48 modular matrix router &mdash; HDMI / SDI / HDBaseT</span>
+              <span class="tags"><span class="tag">SW1-1</span></span>
+            </button>
+            <div class="blank">unused bays</div>
+            <button class="unit cat-power" data-target="t-seq11">
+              <span class="u-name">SurgeX SEQ-1U</span>
+              <span class="u-sub">Power conditioner/sequencer &mdash; LED reads 116&nbsp;V, front lock + power button</span>
+              <span class="tags"><span class="tag">SEQ1-1</span></span>
+            </button>
+          </div>
+        </article>
+
+        <!-- RACK 5 -->
+        <article class="rack">
+          <header>
+            <span class="rackno">R5</span>
+            <div>
+              <h3>Audio system</h3>
+              <p>AVI SPL &middot; wireless mics, DSP, amplification &middot; survey start</p>
+            </div>
+          </header>
+          <div class="units">
+            <button class="unit cat-none" data-target="t-avispl">
+              <span class="u-name">AVI SPL faceplate</span>
+              <span class="u-sub">&ldquo;Engineered and installed by AVI SPL&rdquo;</span>
+            </button>
+            <div class="blank">gap</div>
+            <button class="unit cat-audio" data-target="t-uhf">
+              <span class="u-name">UHF antenna distribution &times;2</span>
+              <span class="u-sub">RF antenna/power distribution for the wireless mic system</span>
+              <span class="tags"><span class="tag">DA0-1</span><span class="tag">DA0-2</span></span>
+              <span class="count">&times;2</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-mic">
+              <span class="u-name">Shure SM58 handheld mic</span>
+              <span class="u-sub">Sticker &ldquo;4&rdquo; &mdash; likely paired to receiver WR1-4; suspected paging / &ldquo;voice of God&rdquo; mic</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-shure">
+              <span class="u-name">Shure ULXS4 receivers &times;6</span>
+              <span class="u-sub">All group 2, each on its own channel; one labeled WR1-4 matches the SM58</span>
+              <span class="tags"><span class="tag">WR1-4</span></span>
+              <span class="count">&times;6</span>
+            </button>
+            <button class="unit cat-control" data-target="t-kvm5">
+              <span class="u-name">KVM monitor + keyboard</span>
+              <span class="u-sub">Connection unknown &mdash; to be traced</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-xmod">
+              <span class="u-name">Biamp Tesira EX-MOD</span>
+              <span class="u-sub">Tesira expander &mdash; LEDs: power, alarm, activity, status</span>
+              <span class="tags"><span class="tag">DS1-2</span></span>
+            </button>
+            <button class="unit cat-audio" data-target="t-exin">
+              <span class="u-name">Biamp Tesira EX-IN</span>
+              <span class="u-sub">Input expander, mounted between the EX-MOD and Server IO</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-serverio">
+              <span class="u-name">Biamp Tesira Server IO</span>
+              <span class="u-sub">DSP core for the audio system</span>
+              <span class="tags"><span class="tag">DS1-1</span></span>
+            </button>
+            <button class="unit cat-audio" data-target="t-qt300">
+              <span class="u-name">Cambridge Sound Management QT300</span>
+              <span class="u-sub">Sound-masking generator &mdash; v6.2.0, status OK, H2B3</span>
+              <span class="tags"><span class="tag">MS1-1</span></span>
+            </button>
+            <button class="unit cat-power" data-target="t-surgex5">
+              <span class="u-name">SurgeX SEQ-1U</span>
+              <span class="u-sub">Power conditioner &mdash; &ldquo;Status: all on &middot; 116&nbsp;V &middot; protection good&rdquo;; SEL / ADJ buttons</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-jbl">
+              <span class="u-name">JBL CSA 2120Z DriveCore amps &times;6</span>
+              <span class="u-sub">Only two carry labels</span>
+              <span class="tags"><span class="tag">PA4-5</span><span class="tag">PA4-6</span></span>
+              <span class="count">&times;6</span>
+            </button>
+            <button class="unit cat-audio" data-target="t-xpa">
+              <span class="u-name">Extron XPA power amps &times;6</span>
+              <span class="u-sub">1&times; XPA 2002, 1&times; XPA 2003C, 4&times; XPA 4002 &mdash; LEDs: over-temp, limiter/protect, signal</span>
+              <span class="tags"><span class="tag">PA1-1</span><span class="tag">PA2-1</span><span class="tag">&hellip;</span></span>
+              <span class="count">&times;6</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TIMELINE ============ -->
+  <section class="sec" aria-labelledby="h-tl">
+    <h2 id="h-tl">Walkthrough timeline</h2>
+    <p class="sub">
+      Where the 22:54 of narration was spent. The walk ran right-to-left &mdash; Rack 5 first,
+      Rack 1 last. Depth of blue encodes rack number (light&nbsp;=&nbsp;R1 &hellip; dark&nbsp;=&nbsp;R5); gray is
+      intro and wrap-up. Click a segment to jump to that section of the transcript.
+    </p>
+    <div class="tl">
+      <div class="tl-bar">
+        <button class="tl-seg" style="flex:70;  background:var(--grid)"    data-target="sec-intro" title="Intro &amp; room overview — 00:00–01:36" aria-label="Intro and room overview, 0:00 to 1:36"></button>
+        <button class="tl-seg" style="flex:269; background:var(--seq-600)" data-target="sec-r5" title="Rack 5 · Audio — 01:36–07:46" aria-label="Rack 5 audio, 1:36 to 7:46"></button>
+        <button class="tl-seg" style="flex:114; background:var(--seq-500)" data-target="sec-r4" title="Rack 4 · Control + video — 07:46–10:23" aria-label="Rack 4 control and video, 7:46 to 10:23"></button>
+        <button class="tl-seg" style="flex:276; background:var(--seq-400)" data-target="sec-r3" title="Rack 3 · Conferencing + sources — 10:23–16:42" aria-label="Rack 3 conferencing and sources, 10:23 to 16:42"></button>
+        <button class="tl-seg" style="flex:175; background:var(--seq-300)" data-target="sec-r2" title="Rack 2 · Cabling + security — 16:42–20:42" aria-label="Rack 2 cabling and security, 16:42 to 20:42"></button>
+        <button class="tl-seg" style="flex:52;  background:var(--seq-250)" data-target="sec-r1" title="Rack 1 · Network core — 20:42–21:54" aria-label="Rack 1 network core, 20:42 to 21:54"></button>
+        <button class="tl-seg" style="flex:44;  background:var(--grid)"    data-target="sec-wrap" title="Wrap-up — 21:54–22:54" aria-label="Wrap-up, 21:54 to 22:54"></button>
+      </div>
+      <div class="tl-labels" aria-hidden="true">
+        <span style="flex:70">Intro</span>
+        <span style="flex:269">R5 · Audio</span>
+        <span style="flex:114">R4 · Control</span>
+        <span style="flex:276">R3 · Conf + sources</span>
+        <span style="flex:175">R2 · Security</span>
+        <span style="flex:52">R1</span>
+        <span style="flex:44">Wrap</span>
+      </div>
+      <div class="tl-scale" aria-hidden="true">
+        <span>00:00</span><span>05:00</span><span>10:00</span><span>15:00</span><span>20:00</span><span>22:54</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INVENTORY ============ -->
+  <section class="sec" aria-labelledby="h-inv">
+    <h2 id="h-inv">Equipment inventory</h2>
+    <p class="sub">Everything identified on camera, in walk order (Rack 5 &rarr; Rack 1). Sticker labels as read aloud.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Rack</th><th>Device</th><th>Model</th><th>Qty</th><th>Labels</th><th>Category</th><th>Notes from narration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">R5</td><td>UHF antenna distribution</td><td class="mono">&mdash;</td><td class="num">2</td><td class="mono">DA0-1, DA0-2</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Feeds the wireless mic receivers</td></tr>
+          <tr><td class="num">R5</td><td>Shure handheld mic</td><td class="mono">SM58</td><td class="num">1</td><td class="mono">&ldquo;4&rdquo;</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Mode-set + off buttons; suspected office paging mic</td></tr>
+          <tr><td class="num">R5</td><td>Shure wireless receiver</td><td class="mono">ULXS4</td><td class="num">6</td><td class="mono">WR1-4 (one)</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>All group 2, unique channels; WR1-4 pairs with the SM58</td></tr>
+          <tr><td class="num">R5</td><td>KVM monitor + keyboard</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-control)"></span>Control</span></td><td>Host connection not yet traced</td></tr>
+          <tr><td class="num">R5</td><td>Biamp Tesira expander</td><td class="mono">EX-MOD</td><td class="num">1</td><td class="mono">DS1-2</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Power / alarm / activity / status LEDs on all Tesira gear</td></tr>
+          <tr><td class="num">R5</td><td>Biamp Tesira input expander</td><td class="mono">EX-IN</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Mounted between EX-MOD and Server IO</td></tr>
+          <tr><td class="num">R5</td><td>Biamp Tesira DSP core</td><td class="mono">Server IO</td><td class="num">1</td><td class="mono">DS1-1</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Central audio DSP</td></tr>
+          <tr><td class="num">R5</td><td>Cambridge Sound Management</td><td class="mono">QT300</td><td class="num">1</td><td class="mono">MS1-1</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Sound masking; v6.2.0, status OK, H2B3</td></tr>
+          <tr><td class="num">R5</td><td>SurgeX power conditioner</td><td class="mono">SEQ-1U</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-power)"></span>Power</span></td><td>&ldquo;Status all on, 116 volts, protection good&rdquo;; SEL/ADJ</td></tr>
+          <tr><td class="num">R5</td><td>JBL DriveCore amplifier</td><td class="mono">CSA 2120Z</td><td class="num">6</td><td class="mono">PA4-5, PA4-6</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Only two of six labeled</td></tr>
+          <tr><td class="num">R5</td><td>Extron power amplifier</td><td class="mono">XPA 2002 / 2003C / 4002</td><td class="num">6</td><td class="mono">PA1-1, PA2-1, &hellip;</td><td><span class="catcell"><span class="dot" style="background:var(--c-audio)"></span>Audio &amp; RF</span></td><td>Bottom four are XPA 4002; over-temp / limiter / signal LEDs</td></tr>
+          <tr><td class="num">R4</td><td>Crestron control processor</td><td class="mono">CP3N</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-control)"></span>Control</span></td><td>3-Series advanced control processor</td></tr>
+          <tr><td class="num">R4</td><td>Crestron control processor</td><td class="mono">PRO3</td><td class="num">1</td><td class="mono">CNT-01</td><td><span class="catcell"><span class="dot" style="background:var(--c-control)"></span>Control</span></td><td>Second 3-Series processor</td></tr>
+          <tr><td class="num">R4</td><td>Crestron graphics engine</td><td class="mono">DGE-2</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-vidproc)"></span>Video proc</span></td><td>Console monitor shows &ldquo;Starting, please wait&rdquo;</td></tr>
+          <tr><td class="num">R4</td><td>tvONE video-wall processor</td><td class="mono">CORIOmaster</td><td class="num">1</td><td class="mono">VWP1-1</td><td><span class="catcell"><span class="dot" style="background:var(--c-vidproc)"></span>Video proc</span></td><td>Believed to drive the 12-panel LED wall</td></tr>
+          <tr><td class="num">R4</td><td>PureLink matrix router</td><td class="mono">PM48X</td><td class="num">1</td><td class="mono">SW1-1</td><td><span class="catcell"><span class="dot" style="background:var(--c-vidproc)"></span>Video proc</span></td><td>48&times;48 cross-platform; HDMI / SDI / HDBaseT</td></tr>
+          <tr><td class="num">R4</td><td>SurgeX power conditioner</td><td class="mono">SEQ-1U</td><td class="num">1</td><td class="mono">SEQ1-1</td><td><span class="catcell"><span class="dot" style="background:var(--c-power)"></span>Power</span></td><td>116 V on LED; front lock and power button</td></tr>
+          <tr><td class="num">R3</td><td>Polycom codec</td><td class="mono">RealPresence Group 500</td><td class="num">5</td><td class="mono">RPG1-2 &hellip; RPG1-5</td><td><span class="catcell"><span class="dot" style="background:var(--c-conf)"></span>Conferencing</span></td><td>Rooms 009 (&ldquo;Plenary&rdquo;?), 025-1/2 (Reveal 1/2), 004 (Bay 2), 002 (Bay 1)</td></tr>
+          <tr><td class="num">R3</td><td>Crestron card interface</td><td class="mono">CEN-CI3-3</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-control)"></span>Control</span></td><td>3-Series; slots 1&ndash;3 LEDs</td></tr>
+          <tr><td class="num">R3</td><td>Extron streaming processor</td><td class="mono">SMP 300-series</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-source)"></span>Media source</span></td><td>Record/stream deck; purpose in this system unknown</td></tr>
+          <tr><td class="num">R3</td><td>Abekas production server</td><td class="mono">Mira</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-source)"></span>Media source</span></td><td>Reference / disc / activity / fans LEDs; purpose unknown</td></tr>
+          <tr><td class="num">R3</td><td>Apple TV</td><td class="mono">&mdash;</td><td class="num">5</td><td class="mono">TV1-1 &hellip; TV1-5</td><td><span class="catcell"><span class="dot" style="background:var(--c-source)"></span>Media source</span></td><td>Top bay partially collapsed over three of them</td></tr>
+          <tr><td class="num">R3</td><td>Samsung Blu-ray player</td><td class="mono">BD-J7500</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-source)"></span>Media source</span></td><td>Model read off the rear panel</td></tr>
+          <tr><td class="num">R3</td><td>Cable TV tuners</td><td class="mono">RNG150N, RNG110, +2</td><td class="num">4</td><td class="mono">CTV1-1 &hellip; CTV1-3</td><td><span class="catcell"><span class="dot" style="background:var(--c-source)"></span>Media source</span></td><td>Xfinity &times;2, Comcast, Motorola Xfinity; remotes attached</td></tr>
+          <tr><td class="num">R2</td><td>CommScope Uniprise patch fields</td><td class="mono">Cat6</td><td class="num">&asymp;4</td><td class="mono">1-AB-B, 1-AB-C</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>Top bays; copper terminations</td></tr>
+          <tr><td class="num">R2</td><td>Cisco switch</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">AV SWITCH (tape)</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>&asymp;bay 35; dedicated AV network switch</td></tr>
+          <tr><td class="num">R2</td><td>Corning LANscape cross-connect</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>24-strand fiber, first &harr; second floor</td></tr>
+          <tr><td class="num">R2</td><td>Avigilon KVM console</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-sec)"></span>Security</span></td><td>Motorola Solutions; drives the desktop PC</td></tr>
+          <tr><td class="num">R2</td><td>Avigilon recorder / drives</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-sec)"></span>Security</span></td><td>Drive array; model unread</td></tr>
+          <tr><td class="num">R2</td><td>OpenEye recorder</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-sec)"></span>Security</span></td><td>Stores CCTV camera footage</td></tr>
+          <tr><td class="num">R2</td><td>Unidentified unit</td><td class="mono">?</td><td class="num">1</td><td class="mono">&ldquo;cameras only&rdquo;</td><td><span class="catcell"><span class="dot" style="background:var(--c-sec)"></span>Security</span></td><td>No make/model visible; ID from photos later</td></tr>
+          <tr><td class="num">R1</td><td>UniFi gateway</td><td class="mono">Dream Machine Pro</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>&ldquo;The heart of the system&rdquo; &mdash; router, maybe not modem</td></tr>
+          <tr><td class="num">R1</td><td>UniFi switch</td><td class="mono">USW</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>Core switch beside the gateway</td></tr>
+          <tr><td class="num">R1</td><td>CommScope patch fields</td><td class="mono">&mdash;</td><td class="num">4</td><td class="mono">DATA 1A&ndash;1D</td><td><span class="catcell"><span class="dot" style="background:var(--c-net)"></span>Network</span></td><td>Front-of-rack jumper fields</td></tr>
+          <tr><td class="num">R1</td><td>Software House power unit</td><td class="mono">&mdash;</td><td class="num">1</td><td class="mono">&mdash;</td><td><span class="catcell"><span class="dot" style="background:var(--c-sec)"></span>Security</span></td><td>Access-control power; deferred to separate video</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ OPEN QUESTIONS ============ -->
+  <section class="sec" aria-labelledby="h-q">
+    <h2 id="h-q">Open questions</h2>
+    <p class="sub">Everything the narrator flagged as unknown, unresolved, or deferred &mdash; the to-do list for mapping this system.</p>
+    <div class="cards">
+      <div class="card"><span class="q">Q1 · Cabling</span><h3>Where do 100&ndash;200 Cat6 runs go?</h3><p>A large bundle of white Ethernet cables exits the tops of Racks 1&ndash;2 and disappears into the building. No documented terminations.</p></div>
+      <div class="card"><span class="q">Q2 · Rack 5</span><h3>What is the KVM connected to?</h3><p>A rack-mounted KVM monitor and keyboard sit mid-rack in R5 with no obvious host. Needs cable tracing.</p></div>
+      <div class="card"><span class="q">Q3 · Rack 3</span><h3>What does the Extron SMP record?</h3><p>An SMP 300-series streaming media processor with full transport controls &mdash; but its sources and destinations are unmapped.</p></div>
+      <div class="card"><span class="q">Q4 · Rack 3</span><h3>Why is an Abekas Mira here?</h3><p>A broadcast production/replay server is unusual in a corporate AV rack. Role unknown; a Polycom remote was resting on it.</p></div>
+      <div class="card"><span class="q">Q5 · Rack 2</span><h3>Identify the &ldquo;cameras only&rdquo; unit</h3><p>One security-rack device has no visible make or model. Its faceplate is distinctive enough to identify from photos.</p></div>
+      <div class="card"><span class="q">Q6 · Rack 1</span><h3>Software House power unit</h3><p>Access-control power supply (220&nbsp;V-class input) explicitly deferred to a separate walkthrough video.</p></div>
+      <div class="card"><span class="q">Q7 · Rack 4</span><h3>Is the DGE-2 stuck at boot?</h3><p>Its console monitor read &ldquo;Starting, please wait&rdquo; during the entire walkthrough.</p></div>
+      <div class="card"><span class="q">Q8 · Rack 3</span><h3>Why four cable-TV boxes?</h3><p>Two Xfinity models, a Comcast box, and a Motorola Xfinity box &mdash; &ldquo;I can&rsquo;t really imagine why you would need that much cable television.&rdquo;</p></div>
+    </div>
+  </section>
+
+  <!-- ============ TRANSCRIPT ============ -->
+  <section class="sec" aria-labelledby="h-tx">
+    <h2 id="h-tx">Full transcript</h2>
+    <p class="sub">All 94 cues, grouped by rack. Timestamps are cue start times.</p>
+    <input class="tsearch" id="tsearch" type="search" placeholder="Search the transcript&hellip;" aria-label="Search the transcript">
+    <div class="transcript" id="transcript">
+
+      <div class="tsec" id="sec-intro"><span class="swatch" style="background:var(--grid)"></span><h3>Intro &amp; room overview</h3><span class="range">00:00 &ndash; 01:36</span></div>
+      <p class="cue"><span class="ts">00:00</span><span class="tx">Okay, I&rsquo;m going to start here and move to the left.</span></p>
+      <p class="cue" id="t-avispl"><span class="ts">00:05</span><span class="tx">This looks to be just, it says engineered and installed by AVI SPL.</span></p>
+      <p class="cue"><span class="ts">00:13</span><span class="tx">The next one down on this rack, so this is the rack that is all the way to the right on a 1, 2, 3, 4, 5 rack system over here.</span></p>
+      <p class="cue"><span class="ts">00:22</span><span class="tx">And basically I&rsquo;m just going to talk through everything to try and map out how these things work. Out of the top of this rack there&rsquo;s &mdash; I don&rsquo;t even want to try and estimate, maybe 100, 200 roughly, somewhere in between &mdash; white ethernet cables that are bundled together that come up out of the top of the racks on the far left, the first and the second rack we&rsquo;ll call them.</span></p>
+      <p class="cue"><span class="ts">00:49</span><span class="tx">And out of those racks come up and go around.</span></p>
+      <p class="cue"><span class="ts">00:51</span><span class="tx">And then throughout the system building is what it kind of seems like.</span></p>
+      <p class="cue"><span class="ts">00:57</span><span class="tx">And so I wish I could create a 3D graph easier than I can right now.</span></p>
+      <p class="cue"><span class="ts">01:02</span><span class="tx">But for the lack of visuals that I have, I am going to actually create a couple of visuals here.</span></p>
+      <p class="cue"><span class="ts">01:12</span><span class="tx">For the lack of visuals that I have, I&rsquo;m just going to talk through the hardware.</span></p>
+      <p class="cue"><span class="ts">01:17</span><span class="tx">And see what&rsquo;s here, just because I feel like it will help me map things out when I go to ask for advice on how to put these things together.</span></p>
+
+      <div class="tsec" id="sec-r5"><span class="swatch" style="background:var(--seq-600)"></span><h3>Rack 5 &mdash; audio system</h3><span class="range">01:36 &ndash; 07:46</span></div>
+      <p class="cue"><span class="ts">01:36</span><span class="tx">Got panels on the wall which is just power in the back. Okay, so if we start on the fifth rack over here to the far right, as I said&hellip;</span></p>
+      <p class="cue"><span class="ts">02:03</span><span class="tx">It says engineered and installed by AVI SPL.</span></p>
+      <p class="cue" id="t-uhf"><span class="ts">02:18</span><span class="tx">So we skip &mdash; I don&rsquo;t know if these are called racks, these little spaces in between &mdash; but you have a UHF antenna power distribution system, which is labeled, there&rsquo;s a white sticker on there that&rsquo;s labeled DA0 and the DA2.</span></p>
+      <p class="cue"><span class="ts">02:32</span><span class="tx">DA0-1 and DA0-2.</span></p>
+      <p class="cue" id="t-mic"><span class="ts">02:36</span><span class="tx">And I actually see the Shure microphone that&rsquo;s probably connected to this thing.</span></p>
+      <p class="cue"><span class="ts">02:40</span><span class="tx">It has a white sticker on it that says 4.</span></p>
+      <p class="cue"><span class="ts">02:42</span><span class="tx">The mic itself is a Shure SM58.</span></p>
+      <p class="cue"><span class="ts">02:44</span><span class="tx">It has a mode set button and off button.</span></p>
+      <p class="cue"><span class="ts">02:48</span><span class="tx">I don&rsquo;t know exactly what this is connected to, but I&rsquo;m assuming you can kind of do like a voice of God here in the office.</span></p>
+      <p class="cue"><span class="ts">02:55</span><span class="tx">I kind of want to test it, to be told the audio stuff is probably more buttoned up than the Internet stuff at this point.</span></p>
+      <p class="cue"><span class="ts">03:02</span><span class="tx">As you can see.</span></p>
+      <p class="cue" id="t-shure"><span class="ts">03:05</span><span class="tx">On the next level, they are Shure receivers.</span></p>
+      <p class="cue"><span class="ts">03:10</span><span class="tx">With the Shure receivers, there are one, two, three &mdash; there are six Shure receivers.</span></p>
+      <p class="cue"><span class="ts">03:16</span><span class="tx">And when I say Shure, I mean S-H-U-R-E receivers that are all ULX S4s.</span></p>
+      <p class="cue"><span class="ts">03:25</span><span class="tx">All on group two, but all on different channels.</span></p>
+      <p class="cue"><span class="ts">03:28</span><span class="tx">Hey, how you doing?</span></p>
+      <p class="cue"><span class="ts">03:30</span><span class="tx">Aren&rsquo;t you a fianc&eacute; or a husband to Sarah? Yeah, nice. So I&rsquo;m just recording, but you can look &mdash; I&rsquo;m just kind of getting a transcript so I can try and help him figure out what the heck this stuff is, basically. So you can come in and look at whatever you want.</span></p>
+      <p class="cue" id="t-kvm5"><span class="ts">03:47</span><span class="tx">Okay, so on the Shure ULXS4s, I believe that goes to the Shure SM58 that&rsquo;s connected, and then based on the grouping that&rsquo;s on there, I see one Shure receiver that is labeled WR1-4, so I think that&rsquo;s what matches up to the microphone. And then after the six Shure receivers you come down, there&rsquo;s like a KVM monitor with a keyboard.</span></p>
+      <p class="cue"><span class="ts">04:15</span><span class="tx">I still have not quite figured out what that is plugged into, but maybe with some mapping, we&rsquo;ll figure it out.</span></p>
+      <p class="cue" id="t-xmod"><span class="ts">04:23</span><span class="tx">After you come down another level, there is a brand called Tesira, spelled T-E-S-I-R-A, with an X mod.</span></p>
+      <p class="cue"><span class="ts">04:34</span><span class="tx">There&rsquo;s DS1-2 is the white sticker label on there.</span></p>
+      <p class="cue" id="t-serverio"><span class="ts">04:38</span><span class="tx">And then right below the X mod, there is a Server IO by the same brand of Tesira, T-E-S-I-R-A.</span></p>
+      <p class="cue" id="t-exin"><span class="ts">04:45</span><span class="tx">And this is labeled with white sticker DS1-1. Both seem to have some kind of Biamp branding &mdash; I don&rsquo;t know what that means, actually. But in between the X mod and in between the Server IO there is actually an EX-IN by the same brand, Tesira, T-E-S-I-R-A, Biamp, as you can see here. And it&rsquo;s got four LEDs on there for power, alarm, activity, and status.</span></p>
+      <p class="cue"><span class="ts">05:14</span><span class="tx">And all of the Tesira gear has those four lights on there.</span></p>
+      <p class="cue" id="t-qt300"><span class="ts">05:18</span><span class="tx">Okay, that being said, if you go down a little bit more, there&rsquo;s a QT300, Cambridge Sound Management, is the very next rack down after the Tesira gear.</span></p>
+      <p class="cue"><span class="ts">05:31</span><span class="tx">So Cambridge Sound Management QT300, version 6.2.0, status okay, H2B3.</span></p>
+      <p class="cue"><span class="ts">05:38</span><span class="tx">It has a white sticker label that says MS1-1.</span></p>
+      <p class="cue" id="t-surgex5"><span class="ts">05:42</span><span class="tx">If you go below that, there&rsquo;s a SurgeX SEQ-1U.</span></p>
+      <p class="cue"><span class="ts">05:47</span><span class="tx">And I kind of believe that this is specifically for power.</span></p>
+      <p class="cue"><span class="ts">05:53</span><span class="tx">On the digital LED or LCD &mdash; I don&rsquo;t know what this is &mdash; system or screen, it says status all on, 116 volts, protection good.</span></p>
+      <p class="cue"><span class="ts">06:02</span><span class="tx">And then there&rsquo;s two what look like little reset buttons or something like that; they say SEL and ADJ.</span></p>
+      <p class="cue" id="t-jbl"><span class="ts">06:11</span><span class="tx">And then, of course, right below that, we have what looks like amps, I believe.</span></p>
+      <p class="cue"><span class="ts">06:15</span><span class="tx">So there are six JBL-branded amps.</span></p>
+      <p class="cue"><span class="ts">06:22</span><span class="tx">I guess they&rsquo;re amps.</span></p>
+      <p class="cue"><span class="ts">06:24</span><span class="tx">And they are CSA 2120Z DriveCores.</span></p>
+      <p class="cue"><span class="ts">06:31</span><span class="tx">Only two of them have white sticker labels on there.</span></p>
+      <p class="cue"><span class="ts">06:35</span><span class="tx">One is labeled PA4-5 and PA4-6.</span></p>
+      <p class="cue"><span class="ts">06:38</span><span class="tx">And if you go down to the very bottom, there are 1, 2, 3, 4, 5, 6 &mdash; six.</span></p>
+      <p class="cue" id="t-xpa"><span class="ts">06:55</span><span class="tx">Extron-branded Extron power amplifiers. There&rsquo;s three different models: one is XPA 2002, one is XPA 2003C, and then the other one is XPA 4002 &mdash; and that&rsquo;s the bottom four. So the bottom four are the same model, the top two are two different models. All are labeled with white stickers: PA1-1&hellip;</span></p>
+      <p class="cue"><span class="ts">07:22</span><span class="tx">PA2-1 for the 2003, and then the rest of them are kind of labeled accordingly.</span></p>
+      <p class="cue"><span class="ts">07:29</span><span class="tx">And I&rsquo;ll stop right here so you can kind of get a picture of it.</span></p>
+      <p class="cue"><span class="ts">07:33</span><span class="tx">I see over-temperature as a light, an LED on here.</span></p>
+      <p class="cue"><span class="ts">07:38</span><span class="tx">Then you also see limiter slash protect.</span></p>
+      <p class="cue"><span class="ts">07:40</span><span class="tx">You see signal.</span></p>
+      <p class="cue"><span class="ts">07:41</span><span class="tx">So as signal comes through this thing, I think those things light up.</span></p>
+
+      <div class="tsec" id="sec-r4"><span class="swatch" style="background:var(--seq-500)"></span><h3>Rack 4 &mdash; control + video wall</h3><span class="range">07:46 &ndash; 10:23</span></div>
+      <p class="cue" id="t-cp3n"><span class="ts">07:46</span><span class="tx">If I go over to the very next rack &mdash; so that was rack number five &mdash; rack number four has at the very top AVI SPL, because I believe that&rsquo;s the brand. There&rsquo;s a Crestron 3-Series advanced control processor, and there&rsquo;s&hellip;</span></p>
+      <p class="cue"><span class="ts">08:04</span><span class="tx">Three of these Crestron rack things.</span></p>
+      <p class="cue"><span class="ts">08:08</span><span class="tx">I don&rsquo;t know what that is. It says digital graphics engine, which is a little crazy.</span></p>
+      <p class="cue"><span class="ts">08:12</span><span class="tx">But there&rsquo;s three different models.</span></p>
+      <p class="cue"><span class="ts">08:13</span><span class="tx">They&rsquo;re all Crestron branded, but there&rsquo;s three different models.</span></p>
+      <p class="cue"><span class="ts">08:16</span><span class="tx">The top one is the CP3N.</span></p>
+      <p class="cue" id="t-pro3"><span class="ts">08:19</span><span class="tx">The next one down, which has a white label of CNT-01.</span></p>
+      <p class="cue"><span class="ts">08:24</span><span class="tx">This model is the PRO3, P-R-O-3.</span></p>
+      <p class="cue" id="t-dge2"><span class="ts">08:28</span><span class="tx">The next model down is the DGE-2.</span></p>
+      <p class="cue"><span class="ts">08:31</span><span class="tx">Again, all three&hellip;</span></p>
+      <p class="cue"><span class="ts">08:34</span><span class="tx">Crestron branded, but one says digital graphics engine &mdash; that&rsquo;s the DGE-2 &mdash; one says advanced control processor &mdash; that&rsquo;s the PRO3 &mdash; and the one that says advanced control processor is the CP3N.</span></p>
+      <p class="cue" id="t-dge2mon"><span class="ts">08:48</span><span class="tx">So those three &mdash; you go down a couple of racks, there&rsquo;s three racks of blank space basically, and then you get to the DGE-2, which says &ldquo;starting, please wait,&rdquo; which is connected to the Crestron.</span></p>
+      <p class="cue"><span class="ts">08:59</span><span class="tx">It&rsquo;s just kind of like a monitor that is set on there.</span></p>
+      <p class="cue" id="t-tvone"><span class="ts">09:02</span><span class="tx">And then you have the tvONE, and you have the CORIOmaster, VWP1-1.</span></p>
+      <p class="cue"><span class="ts">09:11</span><span class="tx">We&rsquo;ve done a little bit of research on the tvONE CORIOmaster.</span></p>
+      <p class="cue"><span class="ts">09:16</span><span class="tx">We believe it controls out there some 12-panel LED wall TV thing.</span></p>
+      <p class="cue"><span class="ts">09:23</span><span class="tx">It&rsquo;s got a bunch of TVs on it.</span></p>
+      <p class="cue"><span class="ts">09:24</span><span class="tx">It&rsquo;s pretty cool, actually.</span></p>
+      <p class="cue" id="t-purelink"><span class="ts">09:26</span><span class="tx">If we go down to the very next rack, we skip one rack and we go down one more, there&rsquo;s a PureLink.</span></p>
+      <p class="cue"><span class="ts">09:33</span><span class="tx">Branded PM48X.</span></p>
+      <p class="cue"><span class="ts">09:35</span><span class="tx">Not sure what this does. It says 48&times;48 cross-platform modular matrix router, which is crazy to say.</span></p>
+      <p class="cue"><span class="ts">09:41</span><span class="tx">It supports HDMI and SDI and HDBT.</span></p>
+      <p class="cue"><span class="ts">09:46</span><span class="tx">It is also white sticker labeled SW1-1.</span></p>
+      <p class="cue"><span class="ts">09:49</span><span class="tx">And I forgot to say this, but the CORIOmaster is white labeled VWP1-1.</span></p>
+      <p class="cue"><span class="ts">09:55</span><span class="tx">And I might have said that, but I didn&rsquo;t say it was for the CORIOmaster.</span></p>
+      <p class="cue"><span class="ts">09:58</span><span class="tx">Anyways, it looks like there&rsquo;s some spaces here between the racks that just are not used.</span></p>
+      <p class="cue"><span class="ts">10:03</span><span class="tx">Or maybe they are used, but it&rsquo;s specifically for the PureLink PM48X.</span></p>
+      <p class="cue" id="t-seq11"><span class="ts">10:06</span><span class="tx">And we go all the way down to the bottom.</span></p>
+      <p class="cue"><span class="ts">10:08</span><span class="tx">And at the bottom, it has another SurgeX SEQ-1U that has a little lock on it or whatever, with another LED screen.</span></p>
+      <p class="cue"><span class="ts">10:15</span><span class="tx">This one also says 116 volts on the LED.</span></p>
+      <p class="cue"><span class="ts">10:18</span><span class="tx">This one is white labeled SEQ1-1 with a power button on the front of it.</span></p>
+
+      <div class="tsec" id="sec-r3"><span class="swatch" style="background:var(--seq-400)"></span><h3>Rack 3 &mdash; conferencing + sources</h3><span class="range">10:23 &ndash; 16:42</span></div>
+      <p class="cue"><span class="ts">10:23</span><span class="tx">Okay, that leads to the next rack, which is the third rack. I&rsquo;m trying to speed through this &mdash; if anybody ends up watching the recording, thank you for watching. It&rsquo;s a nice little interesting server setup here. I&rsquo;m trying to speed through it because I am about to be late for a flight that I don&rsquo;t want to miss.</span></p>
+      <p class="cue" id="t-polycom"><span class="ts">10:54</span><span class="tx">Okay, right again at the top we start with AVI SPL &mdash; locations nationwide, corporate office, engineered and installed by this company. The very next rack down is a Polycom, all one word, Polycom RealPresence Group 500, and there are one, two, three, four, five of these things.</span></p>
+      <p class="cue"><span class="ts">11:19</span><span class="tx">All in bays right next to each other. And so the top Polycom RealPresence Group 500 has two different sticker labels: one is like painter&rsquo;s tape, the other is like a white label sticker with red text on it. It says &ldquo;Pleasury&rdquo;? Room 009. The next one down says Reveal 1.</span></p>
+      <p class="cue"><span class="ts">11:42</span><span class="tx">Or does that say pleasure?</span></p>
+      <p class="cue"><span class="ts">11:43</span><span class="tx">I don&rsquo;t know what that word is.</span></p>
+      <p class="cue"><span class="ts">11:46</span><span class="tx">Plenary? Plenary? I don&rsquo;t know.</span></p>
+      <p class="cue"><span class="ts">11:48</span><span class="tx">Reveal 1, which is again the next RealPresence Group 500 down.</span></p>
+      <p class="cue"><span class="ts">11:54</span><span class="tx">And it&rsquo;s white sticker labeled Room 025-1.</span></p>
+      <p class="cue"><span class="ts">12:00</span><span class="tx">So the next one down is Reveal 2, Room 025-2. Bay 2, which is Room 004.</span></p>
+      <p class="cue"><span class="ts">12:08</span><span class="tx">Bay 1 is what this is labeled with the painter&rsquo;s tape.</span></p>
+      <p class="cue"><span class="ts">12:11</span><span class="tx">It says Room 002 with the white sticker label.</span></p>
+      <p class="cue"><span class="ts">12:16</span><span class="tx">The actual Polycoms themselves have different white sticker labels.</span></p>
+      <p class="cue"><span class="ts">12:21</span><span class="tx">All the white sticker labels I just read, all the painter&rsquo;s tape I just read, is actually off to the right of the device itself, on the rack itself.</span></p>
+      <p class="cue"><span class="ts">12:29</span><span class="tx">Whereas these sticker labels I&rsquo;m about to read out to you: skip the first RealPresence Group 500, go to the second one.</span></p>
+      <p class="cue"><span class="ts">12:36</span><span class="tx">This one is labeled RPG1-2; RPG1-3 the next one down; RPG1-4; RPG1-5.</span></p>
+      <p class="cue"><span class="ts">12:45</span><span class="tx">And so we have a 3-Series Crestron.</span></p>
+      <p class="cue"><span class="ts">12:49</span><span class="tx">If you skip a bay, skip a rack&hellip;</span></p>
+      <p class="cue"><span class="ts">12:52</span><span class="tx">And go to the next one, you have a 3-Series Crestron.</span></p>
+      <p class="cue"><span class="ts">12:54</span><span class="tx">Oh, I remember these Crestrons from the other one.</span></p>
+      <p class="cue"><span class="ts">12:58</span><span class="tx">There&rsquo;s one Crestron device here, and it says 3-Series.</span></p>
+      <p class="cue" id="t-cenci3"><span class="ts">13:01</span><span class="tx">It&rsquo;s a card interface, and the model is CEN-CI3-3.</span></p>
+      <p class="cue"><span class="ts">13:06</span><span class="tx">It&rsquo;s got a couple of LEDs on here for power, message, reset setups, and slot 1, 2, 3.</span></p>
+      <p class="cue"><span class="ts">13:12</span><span class="tx">Okay, now for this other one: Extron, channel A, channel B.</span></p>
+      <p class="cue"><span class="ts">13:17</span><span class="tx">USB storage, one, two, three, four, five.</span></p>
+      <p class="cue"><span class="ts">13:20</span><span class="tx">It&rsquo;s got a bunch of buttons on here. I don&rsquo;t know exactly what this Extron actually does, but it has a play, a record, a pause button, a mark button, a layout, preset, a swap.</span></p>
+      <p class="cue"><span class="ts">13:31</span><span class="tx">I have no clue what this thing actually does.</span></p>
+      <p class="cue"><span class="ts">13:33</span><span class="tx">But&hellip;</span></p>
+      <p class="cue" id="t-smp"><span class="ts">13:35</span><span class="tx">Oh, it&rsquo;s a streaming media processor, and it is from the SMP 300 series.</span></p>
+      <p class="cue"><span class="ts">13:42</span><span class="tx">It has four IO LEDs on the front, and you can adjust it up, down, left, right.</span></p>
+      <p class="cue"><span class="ts">13:46</span><span class="tx">Again, not sure what that&rsquo;s for.</span></p>
+      <p class="cue"><span class="ts">13:48</span><span class="tx">Looks pretty cool.</span></p>
+      <p class="cue"><span class="ts">13:49</span><span class="tx">We&rsquo;ll figure it out later.</span></p>
+      <p class="cue" id="t-abekas"><span class="ts">13:51</span><span class="tx">There&rsquo;s an Abekas &mdash; A-B-E-K-A-S is how you spell that brand.</span></p>
+      <p class="cue"><span class="ts">13:57</span><span class="tx">Reference, disc, activity, fans are the LEDs on the front.</span></p>
+      <p class="cue"><span class="ts">14:02</span><span class="tx">It says M-I-R-A &mdash; Mira, I&rsquo;m guessing, is the model there.</span></p>
+      <p class="cue"><span class="ts">14:07</span><span class="tx">Again, I don&rsquo;t really know what this is for. It looks like it comes with a remote, or maybe this is just where people sit the remote &mdash; maybe this is not actually all related. Oh, this is a Polycom remote, actually. I don&rsquo;t know what the remote goes to, but the Polycom remote just looks like a pretty normal remote.</span></p>
+      <p class="cue" id="t-appletv"><span class="ts">14:23</span><span class="tx">Then we also have Apple TV &mdash; TV1-1 is what this white label sticker is labeled as.</span></p>
+      <p class="cue"><span class="ts">14:31</span><span class="tx">We have Apple TV, TV1-2, and then three more.</span></p>
+      <p class="cue"><span class="ts">14:37</span><span class="tx">It seems like this top bay, this top rack, has actually collapsed on itself, because it&rsquo;s hard to get in between, but there&rsquo;s three more Apple TVs all labeled TV1-3, TV1-4, TV1-5.</span></p>
+      <p class="cue" id="t-samsung"><span class="ts">14:50</span><span class="tx">Right one right after the other. There&rsquo;s also a Samsung &mdash; is this a Blu-ray player? I don&rsquo;t know what the heck this is, but it&rsquo;s a Samsung something. I have gone this far without skipping a make or model, so let&rsquo;s go around to the back and figure out what the heck this thing is.</span></p>
+      <p class="cue"><span class="ts">15:12</span><span class="tx">It&rsquo;s a Samsung factory zero, factory six, something like that.</span></p>
+      <p class="cue"><span class="ts">15:21</span><span class="tx">It doesn&rsquo;t really make sense to me.</span></p>
+      <p class="cue"><span class="ts">15:28</span><span class="tx">Oh, okay, I see it.</span></p>
+      <p class="cue"><span class="ts">15:29</span><span class="tx">So it&rsquo;s a model BD-J7500.</span></p>
+      <p class="cue"><span class="ts">15:34</span><span class="tx">That&rsquo;s basically what it is.</span></p>
+      <p class="cue"><span class="ts">15:37</span><span class="tx">BD lends me to believe, or makes me believe, that it&rsquo;s a Blu-ray player &mdash; blue disc.</span></p>
+      <p class="cue" id="t-cable"><span class="ts">15:42</span><span class="tx">Okay, so beyond the Samsung, we&rsquo;re down to an Xfinity box, which is white labeled CTV1-1, as well as a Comcast box, which is CTV1-2, and then a Motorola Xfinity box.</span></p>
+      <p class="cue"><span class="ts">15:58</span><span class="tx">Basically three different forms of cable is what it looks like to me.</span></p>
+      <p class="cue"><span class="ts">16:01</span><span class="tx">White label, white circle label, CTV1-3.</span></p>
+      <p class="cue"><span class="ts">16:05</span><span class="tx">There&rsquo;s another Xfinity box that is different from the one above it.</span></p>
+      <p class="cue"><span class="ts">16:14</span><span class="tx">The first model up top is RNG150N, and then this one is RNG110.</span></p>
+      <p class="cue"><span class="ts">16:22</span><span class="tx">So two different models of Xfinity boxes that all seem to have remotes attached to them.</span></p>
+      <p class="cue"><span class="ts">16:35</span><span class="tx">And I can&rsquo;t really imagine why you would need that much cable television, but for whatever reason, it&rsquo;s in here.</span></p>
+
+      <div class="tsec" id="sec-r2"><span class="swatch" style="background:var(--seq-300)"></span><h3>Rack 2 &mdash; structured cabling + security</h3><span class="range">16:42 &ndash; 20:42</span></div>
+      <p class="cue" id="t-cpi"><span class="ts">16:42</span><span class="tx">Okay, on to the next rack. The next rack is CPI, Chatsworth Products Incorporated, which is very interesting, because it seems like the branding of these two racks is different than the original three racks.</span></p>
+      <p class="cue" id="t-patch2"><span class="ts">17:02</span><span class="tx">And something I didn&rsquo;t notice before: this seems to be completely all cabling.</span></p>
+      <p class="cue" id="t-cisco"><span class="ts">17:33</span><span class="tx">So 1-AB-B, 1-AB-C &mdash; and the front of this looks to be branded by CommScope; I don&rsquo;t know if that has anything to do with the rack itself. And I see a CommScope Uniprise Solutions Cat6 &mdash; well, let&rsquo;s just see, this is basically a switch, a big switch. I didn&rsquo;t even realize this. The top three bays, I should say, are like&hellip; open-ended switches, like connectors &mdash; I don&rsquo;t know what to call these. But if you come down to bay 37, bay 36, these are just switches. Bay 35, I should say &mdash; it&rsquo;s a Cisco switch, and it&rsquo;s an AV switch. I can see there&rsquo;s painter&rsquo;s tape with the label on there: AV switch.</span></p>
+      <p class="cue" id="t-corning"><span class="ts">17:53</span><span class="tx">So again, very, very interesting. Not sure what to make of it, not sure what it does exactly. If you come down a little bit more &mdash; okay, so this is a Corning LANscape Solutions 24-strand cross-connect, first floor to second floor, fiber optic, which is really cool. I didn&rsquo;t realize they have fiber optics in here.</span></p>
+      <p class="cue"><span class="ts">18:15</span><span class="tx">So that&rsquo;s insane.</span></p>
+      <p class="cue" id="t-patch2b"><span class="ts">18:17</span><span class="tx">And then just below that, there&rsquo;s another CommScope Uniprise Solutions Cat6.</span></p>
+      <p class="cue"><span class="ts">18:26</span><span class="tx">How can I say &mdash; a switch, another switch.</span></p>
+      <p class="cue" id="t-avigilonkvm"><span class="ts">18:29</span><span class="tx">Here&rsquo;s a KVM.</span></p>
+      <p class="cue"><span class="ts">18:31</span><span class="tx">Not sure exactly what it does, but it says A-V-I-G-I-L-O-N, a Motorola Solutions company, which seems to be plugged into this little desktop PC down here.</span></p>
+      <p class="cue" id="t-avigilondrives"><span class="ts">18:46</span><span class="tx">And I skipped over it, but there&rsquo;s also an Avigilon &mdash; what looks to be like a bunch of drives.</span></p>
+      <p class="cue"><span class="ts">18:55</span><span class="tx">It looks like a bunch of drives in this.</span></p>
+      <p class="cue"><span class="ts">18:59</span><span class="tx">Okay, I cannot skip it.</span></p>
+      <p class="cue"><span class="ts">19:01</span><span class="tx">I have to go back and look at the model on the back of it to figure it out.</span></p>
+      <p class="cue"><span class="ts">19:03</span><span class="tx">But in between the Avigilon &mdash; I don&rsquo;t know how to pronounce that &mdash; and the PC down here&hellip;</span></p>
+      <p class="cue" id="t-openeye"><span class="ts">19:15</span><span class="tx">There&rsquo;s an OpenEye, what looks to be a drive, hard-disk-drive thing.</span></p>
+      <p class="cue"><span class="ts">19:22</span><span class="tx">I forgot what they call those things.</span></p>
+      <p class="cue"><span class="ts">19:23</span><span class="tx">But they basically store all of the&hellip;</span></p>
+      <p class="cue"><span class="ts">19:27</span><span class="tx">They basically store all of the footage from your closed-circuit television security cameras, is what I understand it to be, on the back of these things.</span></p>
+      <p class="cue"><span class="ts">19:37</span><span class="tx">I mean, look at all these.</span></p>
+      <p class="cue"><span class="ts">19:38</span><span class="tx">There&rsquo;s a high-five-plus on the back of some of these racks.</span></p>
+      <p class="cue"><span class="ts">19:43</span><span class="tx">I&rsquo;ll try and just take quick images.</span></p>
+      <p class="cue"><span class="ts">19:45</span><span class="tx">It&rsquo;s already been a 20-minute video.</span></p>
+      <p class="cue"><span class="ts">19:48</span><span class="tx">Let&rsquo;s try and get the make and model of this.</span></p>
+      <p class="cue"><span class="ts">19:50</span><span class="tx">I&rsquo;ll be going through &mdash; I see an ID, I see what&rsquo;s just a connection type.</span></p>
+      <p class="cue"><span class="ts">19:55</span><span class="tx">Oh, my goodness.</span></p>
+      <p class="cue" id="t-unknowncam"><span class="ts">19:57</span><span class="tx">I have no make and model on what this is.</span></p>
+      <p class="cue"><span class="ts">19:59</span><span class="tx">I guarantee, because the front of it is so unique, I probably could just send a picture and it&rsquo;s done.</span></p>
+      <p class="cue"><span class="ts">20:04</span><span class="tx">And then here on the back, I see what is&hellip;</span></p>
+      <p class="cue"><span class="ts">20:15</span><span class="tx">Also a part of probably the security camera system, and then it says &ldquo;cameras only.&rdquo; So again, I&rsquo;ll just take pictures and video this stuff, and then we&rsquo;ll figure it out in post later on. This is just a regular basic switch &mdash; I recognize what this is. And then that leads us to our last rack, which is very lonely; doesn&rsquo;t have much going on over here. Seems to be just cabling for the most part, but if I go back to the front we can see more of what it is.</span></p>
+
+      <div class="tsec" id="sec-r1"><span class="swatch" style="background:var(--seq-250)"></span><h3>Rack 1 &mdash; network core</h3><span class="range">20:42 &ndash; 21:54</span></div>
+      <p class="cue" id="t-r1"><span class="ts">20:42</span><span class="tx">&hellip;which is really, actually, the heart of the system, which is our network switch and router and modem, from what I understand.</span></p>
+      <p class="cue" id="t-unifi"><span class="ts">20:50</span><span class="tx">Maybe not the modem, but definitely the router.</span></p>
+      <p class="cue"><span class="ts">20:52</span><span class="tx">Because it&rsquo;s a UniFi. I looked this up.</span></p>
+      <p class="cue"><span class="ts">20:55</span><span class="tx">It&rsquo;s a DMP, a Dream Machine Pro, and then a USW from UniFi.</span></p>
+      <p class="cue"><span class="ts">21:00</span><span class="tx">And I already have a little bit of information on what this is.</span></p>
+      <p class="cue"><span class="ts">21:02</span><span class="tx">I will add this all to the repository so we can kind of take notes and come together and figure out what this is.</span></p>
+      <p class="cue" id="t-data1"><span class="ts">21:07</span><span class="tx">I see on the front of here another CommScope&hellip;</span></p>
+      <p class="cue"><span class="ts">21:13</span><span class="tx">Switch. So basically, at the top there&rsquo;s DATA 1A, DATA 1B, DATA 1C, DATA 1D &mdash; for what ends up being one, two, three, four CommScope switches here on the front.</span></p>
+      <p class="cue" id="t-swhouse"><span class="ts">21:28</span><span class="tx">And maybe they&rsquo;re not called switches &mdash; maybe they&rsquo;re just, you know, these little short cables that plug in one to another. Maybe that&rsquo;s not what they&rsquo;re called. But anyways, that&rsquo;s kind of what I picked up on. Okay, 20 minutes, that was enough. I went through all five racks &mdash; from five to one is the order that we went in. I&rsquo;m hoping this ends up being useful. There&rsquo;s a Software House power thing, and a lot of these other things that are for sure power&hellip;</span></p>
+
+      <div class="tsec" id="sec-wrap"><span class="swatch" style="background:var(--grid)"></span><h3>Wrap-up</h3><span class="range">21:54 &ndash; 22:54</span></div>
+      <p class="cue"><span class="ts">21:54</span><span class="tx">&hellip;will have to be gone over in a separate video, some separate understanding. But again, I did what I could in terms of trying to document everything that&rsquo;s in here. No telling how this connects to the rest of the building. This is very near and dear to my heart, because I almost had to buy one of these for a crypto mining thing I was trying to do, funny enough. And they really inspired me &mdash; just that type of 220-volt input or whatever that is.</span></p>
+      <p class="cue"><span class="ts">22:19</span><span class="tx">Just really, really inspiring &mdash; a lot of stuff you can run when you have more power than 110 volts, 120 volts I should say. Okay, that&rsquo;s it. That&rsquo;s the most informative I could be in one video when it comes to this server-rack-room setup, and I kind of hope we can open-source this and figure it out together. I don&rsquo;t know if Swyx really wants to do that, but&hellip;</span></p>
+      <p class="cue"><span class="ts">22:43</span><span class="tx">But maybe community help will come and help us out here.</span></p>
+      <p class="cue"><span class="ts">22:50</span><span class="tx">All right.</span></p>
+      <p class="cue"><span class="ts">22:53</span><span class="tx">I&rsquo;m gone.</span></p>
+      <p class="cue"><span class="ts">22:54</span><span class="tx">Peace.</span></p>
+
+      <p class="nores" id="nores">No cues match that search.</p>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    Source: <span class="mono">20260703-220822-swyx-inc-five-rack-av-network-security-system-walkthrough.vtt</span> &middot;
+    94 cues, 22:54 &middot; Transcript lightly cleaned for readability; timestamps, model numbers, and labels preserved as spoken.
+    Rack positions and unit groupings are reconstructed from narration order and may not match exact U-positions.
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function jumpTo(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      if (el.classList.contains("cue")) {
+        el.classList.remove("flash");
+        void el.offsetWidth;
+        el.classList.add("flash");
+        setTimeout(function () { el.classList.remove("flash"); }, 2400);
+      }
+    }
+
+    document.querySelectorAll("[data-target]").forEach(function (btn) {
+      btn.addEventListener("click", function () { jumpTo(btn.getAttribute("data-target")); });
+    });
+
+    var search = document.getElementById("tsearch");
+    var cues = Array.prototype.slice.call(document.querySelectorAll(".cue"));
+    var secs = Array.prototype.slice.call(document.querySelectorAll(".tsec"));
+    var nores = document.getElementById("nores");
+
+    search.addEventListener("input", function () {
+      var q = search.value.trim().toLowerCase();
+      var any = false;
+      cues.forEach(function (cue) {
+        var tx = cue.querySelector(".tx");
+        var raw = tx.textContent;
+        if (!q) {
+          cue.style.display = "";
+          if (tx.dataset.orig) { tx.textContent = tx.dataset.orig; delete tx.dataset.orig; }
+          return;
+        }
+        var hit = raw.toLowerCase().indexOf(q) !== -1;
+        cue.style.display = hit ? "" : "none";
+        if (hit) {
+          any = true;
+          if (!tx.dataset.orig) tx.dataset.orig = raw;
+          var lower = raw.toLowerCase(), out = "", i = 0, j;
+          while ((j = lower.indexOf(q, i)) !== -1) {
+            out += escapeHtml(raw.slice(i, j)) + "<mark>" + escapeHtml(raw.slice(j, j + q.length)) + "</mark>";
+            i = j + q.length;
+          }
+          out += escapeHtml(raw.slice(i));
+          tx.innerHTML = out;
+        } else if (tx.dataset.orig) {
+          tx.textContent = tx.dataset.orig; delete tx.dataset.orig;
+        }
+      });
+      secs.forEach(function (s) { s.style.display = q ? "none" : ""; });
+      nores.style.display = q && !any ? "block" : "none";
+    });
+
+    function escapeHtml(s) {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  })();
+</script>
+</body>
+</html>
